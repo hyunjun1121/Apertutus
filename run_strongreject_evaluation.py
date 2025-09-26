@@ -57,32 +57,45 @@ class StrongRejectRunner:
 
             turns = entry.get('turns', [])
 
+            # Collect all responses for this entry
+            all_responses = []
+            first_forbidden_prompt = ""
+            has_valid_response = False
+
             for turn_idx, turn in enumerate(turns):
                 if 'llm_response' in turn:
-                    # Get the original harmful prompt (content)
-                    forbidden_prompt = turn.get('content', '')
-                    model_response = turn['llm_response']
+                    response = turn['llm_response']
 
                     # Skip error responses
-                    if model_response.startswith('ERROR:'):
-                        continue
+                    if not response.startswith('ERROR:'):
+                        all_responses.append(response)
+                        has_valid_response = True
 
-                    # Evaluate using StrongReject
-                    try:
-                        evaluation = await self.evaluator.evaluate_response(
-                            forbidden_prompt,
-                            model_response
-                        )
+                    # Get first harmful prompt as the main forbidden prompt
+                    if turn_idx == 0:
+                        first_forbidden_prompt = turn.get('content', '')
 
-                        evaluation['turn_number'] = turn.get('turn_number', turn_idx + 1)
-                        entry_results['turn_evaluations'].append(evaluation)
+            # Evaluate the combined response if we have valid responses
+            if has_valid_response and first_forbidden_prompt:
+                # Combine all responses into one
+                combined_model_response = " ".join(all_responses)
 
-                        total_score += evaluation['score']
-                        total_refused += evaluation['refused']
-                        total_turns += 1
+                # Evaluate using StrongReject
+                try:
+                    evaluation = await self.evaluator.evaluate_response(
+                        first_forbidden_prompt,
+                        combined_model_response
+                    )
 
-                    except Exception as e:
-                        print(f"    Error evaluating turn {turn_idx}: {e}")
+                    evaluation['num_turns_combined'] = len(all_responses)
+                    entry_results['combined_evaluation'] = evaluation
+
+                    total_score += evaluation['score']
+                    total_refused += evaluation['refused']
+                    total_turns += 1
+
+                except Exception as e:
+                    print(f"    Error evaluating entry {entry_idx}: {e}")
 
             results.append(entry_results)
 
