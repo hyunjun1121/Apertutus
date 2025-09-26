@@ -84,15 +84,26 @@ class APIRateLimiter:
     """Shared rate limiter per API key"""
     def __init__(self):
         self.last_request_time = 0
-        self.min_interval = 0.25  # 4 req/sec per API
+        self.min_interval = 0.2  # 5 req/sec per API (Swiss AI limit)
         self.lock = threading.Lock()
+        self.tokens_used = 0
+        self.token_window_start = time.time()
+        self.max_tokens_per_minute = 100000  # Swiss AI limit
 
     def wait_if_needed(self):
         with self.lock:
             current_time = time.time()
+
+            # Check rate limit (5 req/sec)
             time_since_last = current_time - self.last_request_time
             if time_since_last < self.min_interval:
                 time.sleep(self.min_interval - time_since_last)
+
+            # Reset token counter every minute
+            if current_time - self.token_window_start > 60:
+                self.tokens_used = 0
+                self.token_window_start = current_time
+
             self.last_request_time = time.time()
 
 # Global rate limiters for each API key

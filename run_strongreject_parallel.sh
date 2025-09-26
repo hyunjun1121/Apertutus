@@ -21,16 +21,17 @@ echo ""
 echo "Configuration:"
 echo "  - 16 languages (382 entries each = 6,112 total)"
 echo "  - 5 API keys processing in parallel"
-echo "  - Rate limit: 4 req/sec per API (20 req/sec total)"
+echo "  - Rate limit: 5 req/sec per API (25 req/sec total)"
+echo "  - Token limit: 100k tokens/min per API"
 echo "  - Judge model: Apertus-70B"
 echo ""
 
 # Estimate time
 echo "Time Estimation:"
 echo "  - Total evaluations: 6,112"
-echo "  - Max rate: 20 evaluations/sec"
-echo "  - Minimum time: ~5 minutes (if no rate limits)"
-echo "  - Expected time: 30-45 minutes (with API latency)"
+echo "  - Max rate: 25 evaluations/sec (5 APIs × 5 req/sec)"
+echo "  - Theoretical minimum: ~4 minutes"
+echo "  - Expected time: 20-30 minutes (with API latency)"
 echo ""
 
 # Start in tmux session
