@@ -25,9 +25,9 @@ echo "  - 382 entries per language"
 echo "  - Each turn gets individual response"
 echo ""
 
-# Start in tmux session
+# Start in tmux session with unbuffered output
 tmux new-session -d -s llm_turns \
-    "python3 parallel_llm_5api_turn_responses.py --all 2>&1 | tee logs/llm_turn_responses.log"
+    "python3 -u parallel_llm_5api_turn_responses.py --all 2>&1 | tee -a logs/llm_turn_responses.log"
 
 echo "=========================================="
 echo "Turn-by-turn response generation started!"

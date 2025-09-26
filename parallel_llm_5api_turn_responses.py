@@ -7,6 +7,11 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import argparse
 from datetime import datetime
 from apertus_api import ApertusAPI
+import sys
+
+# Force unbuffered output
+sys.stdout.reconfigure(line_buffering=True)
+sys.stderr.reconfigure(line_buffering=True)
 
 class APIWorker:
     """Single API worker that processes one language completely"""
@@ -208,12 +213,12 @@ class ParallelLLMProcessor:
 
     def process_all(self):
         """Process all languages using 5 API keys in parallel"""
-        print("=" * 60)
-        print("PARALLEL LLM TURN-BY-TURN RESPONSE GENERATION")
-        print(f"Languages: {len(self.languages)}")
-        print(f"API Keys: {len(self.api_keys)}")
-        print("Strategy: Each API processes languages with turn-by-turn responses")
-        print("=" * 60)
+        print("=" * 60, flush=True)
+        print("PARALLEL LLM TURN-BY-TURN RESPONSE GENERATION", flush=True)
+        print(f"Languages: {len(self.languages)}", flush=True)
+        print(f"API Keys: {len(self.api_keys)}", flush=True)
+        print("Strategy: Each API processes languages with turn-by-turn responses", flush=True)
+        print("=" * 60, flush=True)
 
         # Group languages for processing
         language_groups = [
