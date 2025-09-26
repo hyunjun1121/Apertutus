@@ -33,7 +33,7 @@ Apertutus is a comprehensive system for testing AI model safety across multiple 
 
 ## Jailbreak Dataset
 
-This prototype utilized the Multi-turn Human Jailbreaks (MHJ) dataset, presented in the paper by Li et al. (2024)[^1].
+- Multi-turn Human Jailbreaks (MHJ)[^1]
 
 ## Installation
 
