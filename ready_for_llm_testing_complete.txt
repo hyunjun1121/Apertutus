@@ -1,0 +1,16 @@
+arb.Arab
+ces.Latn
+cmn.Hani
+deu.Latn
+fra.Latn
+ind.Latn
+ita.Latn
+jpn.Jpan
+kor.Hang
+nld.Latn
+pol.Latn
+por.Latn
+ron.Latn
+rus.Cyrl
+spa.Latn
+tur.Latn
