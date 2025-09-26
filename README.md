@@ -1,4 +1,4 @@
-# Apertutus: Multilingual Safety Testing System for Apertus
+# Apertutus: Multilingual Safety Testing System
 
 Apertutus is a comprehensive system for testing AI model safety across multiple languages using jailbreak attempts and StrongReject evaluation. This prototype is designed based on the fact that Apertutus supports over 1,800 languages, leveraging Apertus as a translation model to test AI model safety across more than 1,800 languages. This allows for conducting jailbreak attempts and StrongReject evaluations for each language, enabling comprehensive verification of model safety in a multilingual environment.
 
