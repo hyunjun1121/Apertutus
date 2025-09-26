@@ -130,6 +130,8 @@ class APIWorker:
 
     def process_language(self, language_code: str) -> str:
         """Process entire language dataset"""
+        print(f"[API {self.api_index}] process_language called for {language_code}", flush=True)
+
         input_file = Path('multilingual_datasets_filtered') / f'mhj_dataset_{language_code}.json'
         output_dir = Path('llm_responses')
         output_dir.mkdir(exist_ok=True)
@@ -152,21 +154,26 @@ class APIWorker:
                 pass
 
         if not input_file.exists():
-            print(f"[API {self.api_index}] Input file not found: {input_file}")
+            print(f"[API {self.api_index}] Input file not found: {input_file}", flush=True)
             return 'error'
 
-        print(f"[API {self.api_index}] Starting {language_code}")
+        print(f"[API {self.api_index}] Starting {language_code}", flush=True)
+        print(f"[API {self.api_index}] Loading dataset from {input_file}", flush=True)
         start_time = time.time()
 
         # Load dataset
         with open(input_file, 'r', encoding='utf-8') as f:
             dataset = json.load(f)
 
+        print(f"[API {self.api_index}] Loaded {len(dataset)} entries for {language_code}", flush=True)
+
         results = []
 
         # Reset counters for this language
         self.processed_count = 0
         self.error_count = 0
+
+        print(f"[API {self.api_index}] Beginning processing for {language_code}...", flush=True)
 
         # Process each entry
         for i, entry in enumerate(dataset):
