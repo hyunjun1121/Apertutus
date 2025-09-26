@@ -12,14 +12,21 @@ A comprehensive system for testing AI model safety across multiple languages usi
 
 ## Pipeline
 
-
-<table align="center">
-  <tr>
-    <td align="center">
-      <img src="https://github.com/hyunjun1121/Apertutus/blob/main/data%20processing.png" alt="Fig 1." width="600px" />
+<table align="center" style="width: 100%; border-collapse: collapse; border: none;">
+  <tr style="border: none;">
+    <td align="center" style="padding: 10px; vertical-align: top; border: none;">
+      <img src="https://raw.githubusercontent.com/hyunjun1121/Apertutus/main/data%20processing.png" alt="Data processing diagram" style="max-width: 100%; height: auto;" />
     </td>
-    <td align="center">
-      <img src="https://github.com/hyunjun1121/Apertutus/blob/main/structure.png" alt="Fig 2." width="600px" />
+    <td align="center" style="padding: 10px; vertical-align: top; border: none;">
+      <img src="https://raw.githubusercontent.com/hyunjun1121/Apertutus/main/structure.png" alt="Attack and calculation structure" style="max-width: 100%; height: auto;" />
+    </td>
+  </tr>
+  <tr style="border: none;">
+    <td align="center" style="vertical-align: top; border: none;">
+      <sub><b>Fig 1.</b> Data Augmentation</sub>
+    </td>
+    <td align="center" style="vertical-align: top; border: none;">
+      <sub><b>Fig 2.</b> Pipeline</sub>
     </td>
   </tr>
 </table>
