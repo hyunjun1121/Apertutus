@@ -24,9 +24,9 @@ echo "  - 5 API keys processing in parallel"
 echo "  - Real-time progress monitoring"
 echo ""
 
-# Start in tmux session
+# Start in tmux session (using fixed version)
 tmux new-session -d -s llm_realtime \
-    "python3 -u parallel_llm_5api_realtime.py --all 2>&1 | tee logs/llm_realtime.log"
+    "python3 -u parallel_llm_5api_realtime_fixed.py --all 2>&1 | tee logs/llm_realtime.log"
 
 echo "=========================================="
 echo "Real-time monitoring started!"
