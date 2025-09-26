@@ -4,6 +4,7 @@ import threading
 from pathlib import Path
 from typing import List, Dict
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import concurrent.futures
 import argparse
 from datetime import datetime
 from apertus_api import ApertusAPI
