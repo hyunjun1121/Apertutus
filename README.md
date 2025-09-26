@@ -2,10 +2,6 @@
 
 Apertutus is a comprehensive system for testing AI model safety across multiple languages using jailbreak attempts and StrongReject evaluation. This prototype is designed based on the fact that Apertutus supports over 1,800 languages, leveraging Apertus as a translation model to test AI model safety across more than 1,800 languages. This allows for conducting jailbreak attempts and StrongReject evaluations for each language, enabling comprehensive verification of model safety in a multilingual environment.
 
-## Requirements
-
-- Insert the API key at config.json
-
 ## Features
 
 - **Multilingual Translation**: Translates safety testing datasets to 40+ languages
@@ -47,7 +43,7 @@ pip install -r requirements.txt
 
 ## Configuration
 
-Edit `config.json` to set your API keys and customize settings.
+**Edit `config.json` to set your API keys and customize settings.**
 
 ## Usage
 
