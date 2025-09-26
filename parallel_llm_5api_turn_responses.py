@@ -34,6 +34,8 @@ class APIWorker:
     def process_turn(self, turn_content: str, conversation_history: List[Dict]) -> str:
         """Process a single turn and get response"""
         try:
+            print(f"[API {self.api_index}] Processing turn (length: {len(turn_content)})", flush=True)
+
             # Wait for rate limit
             self.wait_for_rate_limit()
 
@@ -49,12 +51,16 @@ class APIWorker:
                 'content': turn_content
             })
 
+            print(f"[API {self.api_index}] Calling API with {len(messages)} messages", flush=True)
+
             # Call API
             response = self.api.call_model(
                 messages=messages,
                 temperature=0.7,
                 max_tokens=300
             )
+
+            print(f"[API {self.api_index}] Got response: {len(response) if response else 0} chars", flush=True)
 
             if response:
                 return response
@@ -75,9 +81,13 @@ class APIWorker:
     def process_entry(self, entry: Dict, entry_index: int) -> Dict:
         """Process a single entry - generate response for each turn"""
         try:
+            print(f"[API {self.api_index}] Processing entry {entry_index}", flush=True)
+
             turns = entry.get('turns', [])
             processed_turns = []
             conversation_history = []
+
+            print(f"[API {self.api_index}] Entry has {len(turns)} turns", flush=True)
 
             for turn_idx, turn in enumerate(turns):
                 content = turn.get('content', '')
@@ -248,7 +258,7 @@ class ParallelLLMProcessor:
                 for lang_code in lang_group:
                     future = executor.submit(worker.process_language, lang_code)
                     futures[future] = (api_idx, lang_code)
-                    print(f"[API {api_idx}] Assigned to process {lang_code}")
+                    print(f"[API {api_idx}] Assigned to process {lang_code}", flush=True)
 
             # Collect results
             for future in as_completed(futures):
