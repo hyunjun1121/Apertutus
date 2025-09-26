@@ -12,8 +12,7 @@ A comprehensive system for testing AI model safety across multiple languages usi
 
 ## Pipeline
 
-![Data Augmentation](https://github.com/hyunjun1121/Apertutus/blob/main/data%20processing.png)
-![Pipline](https://github.com/hyunjun1121/Apertutus/blob/main/structure.png)
+![Data Augmentation](https://github.com/hyunjun1121/Apertutus/blob/main/data%20processing.png) ![Pipline](https://github.com/hyunjun1121/Apertutus/blob/main/structure.png)
 
 ## Jailbreak Dataset
 
