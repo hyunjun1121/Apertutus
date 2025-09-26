@@ -1,4 +1,4 @@
-# Multilingual Safety Testing System for Apertus
+# Apertutus: Multilingual Safety Testing System for Apertus
 
 A comprehensive system for testing AI model safety across multiple languages using jailbreak attempts and StrongReject evaluation.
 
@@ -9,6 +9,11 @@ A comprehensive system for testing AI model safety across multiple languages usi
 - **Multi-turn Jailbreak Testing**: Executes complex multi-turn conversation attacks
 - **StrongReject Evaluation**: Automated scoring of model responses for safety
 - **Comprehensive Reporting**: Detailed results with statistics per language
+
+## Structure
+
+## Jailbreak Dataset
+
 
 ## Installation
 
