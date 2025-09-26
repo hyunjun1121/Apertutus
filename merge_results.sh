@@ -58,7 +58,7 @@ for LANG in "${LANGUAGES[@]}"; do
     # Check if parts exist
     if ls multilingual_datasets/mhj_dataset_${LANG}_part*.json 1> /dev/null 2>&1; then
         echo "Merging $LANG..."
-        python tmux_batch_translator.py --merge $LANG
+        python3 tmux_batch_translator.py --merge $LANG
 
         if [ $? -eq 0 ]; then
             SUCCESS_COUNT=$((SUCCESS_COUNT + 1))

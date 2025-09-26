@@ -12,7 +12,6 @@ venv/
 config.json
 
 # Data files
-multilingual_datasets/
 safety_test_results/
 *.xlsx
 

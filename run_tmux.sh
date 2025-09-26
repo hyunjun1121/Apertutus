@@ -41,7 +41,7 @@ for LANG in "${LANGUAGES[@]}"; do
         fi
 
         SESSION_NAME="trans_${LANG}_${START}"
-        COMMAND="python tmux_batch_translator.py --language $LANG --start $START --end $END --api-key $API_KEY_INDEX"
+        COMMAND="python3 tmux_batch_translator.py --language $LANG --start $START --end $END --api-key $API_KEY_INDEX"
 
         echo "  Starting $SESSION_NAME (entries $START-$END, API key $API_KEY_INDEX)"
         tmux new-session -d -s "$SESSION_NAME" "$COMMAND"
