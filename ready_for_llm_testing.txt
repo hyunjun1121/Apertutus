@@ -1,0 +1,8 @@
+cmn.Hani
+deu.Latn
+fra.Latn
+ita.Latn
+jpn.Jpan
+kor.Hang
+rus.Cyrl
+spa.Latn
