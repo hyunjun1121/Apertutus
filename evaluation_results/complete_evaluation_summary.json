@@ -1,0 +1,307 @@
+{
+  "total_languages": 16,
+  "total_entries": 6112,
+  "language_stats": {
+    "arb.Arab": {
+      "total_entries": 382,
+      "refused_count": 121,
+      "refusal_rate": 31.675392670157066,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "ces.Latn": {
+      "total_entries": 382,
+      "refused_count": 128,
+      "refusal_rate": 33.50785340314136,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "cmn.Hani": {
+      "total_entries": 382,
+      "refused_count": 118,
+      "refusal_rate": 30.89005235602094,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "deu.Latn": {
+      "total_entries": 382,
+      "refused_count": 118,
+      "refusal_rate": 30.89005235602094,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "fra.Latn": {
+      "total_entries": 382,
+      "refused_count": 103,
+      "refusal_rate": 26.96335078534031,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "ind.Latn": {
+      "total_entries": 382,
+      "refused_count": 118,
+      "refusal_rate": 30.89005235602094,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "ita.Latn": {
+      "total_entries": 382,
+      "refused_count": 125,
+      "refusal_rate": 32.72251308900523,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "jpn.Jpan": {
+      "total_entries": 382,
+      "refused_count": 108,
+      "refusal_rate": 28.272251308900525,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "kor.Hang": {
+      "total_entries": 382,
+      "refused_count": 107,
+      "refusal_rate": 28.01047120418848,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "nld.Latn": {
+      "total_entries": 382,
+      "refused_count": 108,
+      "refusal_rate": 28.272251308900525,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "pol.Latn": {
+      "total_entries": 382,
+      "refused_count": 115,
+      "refusal_rate": 30.104712041884817,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "por.Latn": {
+      "total_entries": 382,
+      "refused_count": 101,
+      "refusal_rate": 26.439790575916227,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "ron.Latn": {
+      "total_entries": 382,
+      "refused_count": 111,
+      "refusal_rate": 29.05759162303665,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "rus.Cyrl": {
+      "total_entries": 382,
+      "refused_count": 101,
+      "refusal_rate": 26.439790575916227,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "spa.Latn": {
+      "total_entries": 382,
+      "refused_count": 121,
+      "refusal_rate": 31.675392670157066,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    },
+    "tur.Latn": {
+      "total_entries": 382,
+      "refused_count": 97,
+      "refusal_rate": 25.392670157068064,
+      "category_breakdown": {
+        "Illegal Activities": 51,
+        "Impersonation": 25,
+        "Disinformation Spread": 131,
+        "Hate, Unfairness or Harassment": 59,
+        "Physical Harm": 58,
+        "Well-being Infringement": 18,
+        "Malicious Software": 18,
+        "Terrorist Content": 6,
+        "Safety Filter Bypass": 7,
+        "Adult Content": 7,
+        "Privacy Breach": 2
+      }
+    }
+  },
+  "overall_category_distribution": {
+    "Illegal Activities": 816,
+    "Impersonation": 400,
+    "Disinformation Spread": 2096,
+    "Hate, Unfairness or Harassment": 944,
+    "Physical Harm": 928,
+    "Well-being Infringement": 288,
+    "Malicious Software": 288,
+    "Terrorist Content": 96,
+    "Safety Filter Bypass": 112,
+    "Adult Content": 112,
+    "Privacy Breach": 32
+  }
+}
