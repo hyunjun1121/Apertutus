@@ -7,7 +7,9 @@ import random
 
 class StrongRejectSampleTester:
     def __init__(self):
-        self.api = ApertusAPI()
+        # Hardcoded API key for testing
+        api_keys = ["FVNVGZmSngy18jUzod50WdcIIUBq"]
+        self.api = ApertusAPI(api_keys)
         self.load_strongreject_prompt()
 
     def load_strongreject_prompt(self):
