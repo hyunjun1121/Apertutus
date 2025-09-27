@@ -1,0 +1,60 @@
+# Dockerfile for Apertutus Python Backend
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install UV package manager for faster Python package installation
+RUN pip install uv
+
+# Copy requirements files
+COPY requirements.txt requirements_complete.txt ./
+
+# Install Python dependencies using UV
+RUN uv pip install --system -r requirements_complete.txt
+
+# Copy Python source code
+COPY *.py ./
+COPY *.json ./
+COPY *.txt ./
+COPY *.yaml ./
+COPY *.sh ./
+
+# Copy directories with data and configurations
+COPY multilingual_datasets/ ./multilingual_datasets/
+COPY multilingual_datasets_filtered/ ./multilingual_datasets_filtered/
+COPY final_results/ ./final_results/
+COPY evaluation_results/ ./evaluation_results/
+COPY experiment_datasets/ ./experiment_datasets/
+COPY finetuning_datasets/ ./finetuning_datasets/
+COPY safety_dataset_for_training/ ./safety_dataset_for_training/
+COPY llm_responses/ ./llm_responses/
+COPY paper_figures/ ./paper_figures/
+COPY paper_tables/ ./paper_tables/
+COPY final_figures/ ./final_figures/
+COPY apertus-finetuning-recipes/ ./apertus-finetuning-recipes/
+
+# Create necessary directories
+RUN mkdir -p logs outputs temp
+
+# Copy and set up entrypoint script
+COPY docker-entrypoint.sh /app/
+RUN chmod +x /app/docker-entrypoint.sh
+
+# Make shell scripts executable
+RUN chmod +x *.sh
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+
+# Use entrypoint script
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["python", "main.py", "--help"]
