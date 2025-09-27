@@ -11,7 +11,7 @@ echo "=========================================="
 # Create FIXED config
 cat > safety_lora_config_fixed.yaml << EOF
 # Model
-model_name_or_path: swiss-ai/Apertus-8B-Instruct-2509  # Using 8B for faster testing
+model_name_or_path: swiss-ai/Apertus-70B-Instruct-2509  # Using 70B model
 attn_implementation: eager  # Avoid flash attention issues
 dtype: bfloat16
 
@@ -24,7 +24,7 @@ learning_rate: 2.0e-4
 gradient_checkpointing: true
 num_train_epochs: 1
 logging_steps: 10
-per_device_train_batch_size: 2
+per_device_train_batch_size: 1  # Reduced for 70B model
 gradient_accumulation_steps: 4
 
 # LoRA Configuration
@@ -59,7 +59,7 @@ echo -e "\n[Step 1] Entering apertus-finetuning-recipes directory..."
 cd apertus-finetuning-recipes
 
 echo -e "\n[Step 2] Starting fine-tuning with FIXED config..."
-echo "Using 8B model for testing"
+echo "Using 70B model - requires ~140GB disk space and multiple GPUs"
 
 # Use accelerate with zero3 config
 accelerate launch \
