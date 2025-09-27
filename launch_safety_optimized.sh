@@ -94,7 +94,7 @@ echo -e "\n[Step 6] Running with single GPU (no DeepSpeed)..."
 cd apertus-finetuning-recipes
 
 # Use only GPU 0, no distributed training
-CUDA_VISIBLE_DEVICES=0 python sft_train.py \
+CUDA_VISIBLE_DEVICES=0 python3 sft_train.py \
     --config ../safety_lora_optimized.yaml \
     2>&1 | tee ../training_log_${TIMESTAMP}.txt
 
