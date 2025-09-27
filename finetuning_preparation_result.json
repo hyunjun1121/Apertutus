@@ -1,0 +1,87 @@
+{
+  "train_file": "finetuning_datasets\\safety_train_20250927_014600.jsonl",
+  "val_file": "finetuning_datasets\\safety_val_20250927_014600.jsonl",
+  "stats_file": "finetuning_datasets\\safety_stats_20250927_014600.json",
+  "stats": {
+    "arb.Arab": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "ces.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "cmn.Hani": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "deu.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "fra.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "ind.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "ita.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "jpn.Jpan": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "kor.Hang": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "nld.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "pol.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "por.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "ron.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "rus.Cyrl": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "spa.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "tur.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    }
+  }
+}

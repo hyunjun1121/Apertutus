@@ -1,0 +1,109 @@
+{
+  "languages": [
+    "arb.Arab",
+    "ces.Latn",
+    "cmn.Hani",
+    "deu.Latn",
+    "fra.Latn",
+    "ind.Latn",
+    "ita.Latn",
+    "jpn.Jpan",
+    "kor.Hang",
+    "nld.Latn",
+    "pol.Latn",
+    "por.Latn",
+    "ron.Latn",
+    "rus.Cyrl",
+    "spa.Latn",
+    "tur.Latn"
+  ],
+  "language_stats": {
+    "arb.Arab": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "ces.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "cmn.Hani": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "deu.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "fra.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "ind.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "ita.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "jpn.Jpan": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "kor.Hang": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "nld.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "pol.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "por.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "ron.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "rus.Cyrl": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "spa.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    },
+    "tur.Latn": {
+      "total_entries": 382,
+      "single_turn_examples": 1323,
+      "multi_turn_examples": 341
+    }
+  },
+  "total_train": 23961,
+  "total_val": 2663,
+  "train_single_turn": 19051,
+  "train_multi_turn": 4910,
+  "val_single_turn": 2117,
+  "val_multi_turn": 546,
+  "timestamp": "20250927_014600"
+}
