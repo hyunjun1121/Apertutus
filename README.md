@@ -88,9 +88,9 @@ multilingual_datasets/      # Translated datasets
 ├── mhj_dataset_fra.Latn.json
 └── ...
 
-safety_test_results/        # Test results
-├── safety_results_eng.Latn.json
-├── safety_results_kor.Hang.json
+evaluation_results/        # Test results
+├── evaluation_results_eng.Latn.json
+├── evaluation_results_kor.Hang.json
 ├── summary_report.json
 └── ...
 ```
