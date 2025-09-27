@@ -38,12 +38,28 @@ def load_jsonl_to_dataset(file_path):
     return Dataset.from_list(data)
 
 def main():
+    # Find the latest dataset files
+    from pathlib import Path
+    finetuning_dir = Path('finetuning_datasets')
+
+    # Get latest train and val files
+    train_files = sorted(finetuning_dir.glob('safety_train_*.jsonl'))
+    val_files = sorted(finetuning_dir.glob('safety_val_*.jsonl'))
+
+    if not train_files or not val_files:
+        print("ERROR: No training or validation files found in finetuning_datasets/")
+        print("Please run dataset preparation first.")
+        return
+
+    latest_train = str(train_files[-1])
+    latest_val = str(val_files[-1])
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--train_file', type=str,
-                       default='finetuning_datasets/safety_train_20250926_204606.jsonl',
+                       default=latest_train,
                        help='Path to training JSONL file')
     parser.add_argument('--val_file', type=str,
-                       default='finetuning_datasets/safety_val_20250926_204606.jsonl',
+                       default=latest_val,
                        help='Path to validation JSONL file')
     parser.add_argument('--model_name', type=str,
                        default='swiss-ai/Apertus-70B',
