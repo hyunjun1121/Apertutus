@@ -97,6 +97,23 @@ class EntryEvaluator:
         with open('strong_reject.json', 'r') as f:
             self.prompts = json.load(f)
 
+        # Load original MHJ dataset for matching
+        with open('mhj_dataset.json', 'r', encoding='utf-8') as f:
+            self.mhj_dataset = json.load(f)
+
+        # Create lookup dictionary based on first turn content
+        self.mhj_lookup = {}
+        for entry in self.mhj_dataset:
+            if entry['turns'] and len(entry['turns']) > 0:
+                first_turn = entry['turns'][0].get('content', '')
+                if first_turn:
+                    self.mhj_lookup[first_turn] = {
+                        'base_prompt': entry.get('base_prompt', ''),
+                        'num_turns': entry.get('num_turns', 0),
+                        'turn_type': entry.get('turn_type', ''),
+                        'source': entry.get('source', 'MHJ')
+                    }
+
     def wait_for_rate_limit(self):
         current = time.time()
         elapsed = current - self.last_request
@@ -240,6 +257,26 @@ class EntryEvaluator:
                     if 'llm_response' in turn:
                         turn_responses.append(turn['llm_response'])
                 entry['model_response'] = " ".join(turn_responses)
+
+            # Match and add original MHJ metadata
+            # Try to match using first turn's original_content
+            if entry.get('turns') and len(entry['turns']) > 0:
+                first_turn_original = entry['turns'][0].get('original_content', '')
+
+                if first_turn_original in self.mhj_lookup:
+                    mhj_info = self.mhj_lookup[first_turn_original]
+                    entry['base_prompt'] = mhj_info['base_prompt']
+                    entry['num_turns'] = mhj_info['num_turns']
+                    entry['turn_type'] = mhj_info['turn_type']
+                    entry['source'] = mhj_info['source']
+                else:
+                    # Fallback: use entry_index if available
+                    if 'entry_index' in entry and entry['entry_index'] < len(self.mhj_dataset):
+                        mhj_entry = self.mhj_dataset[entry['entry_index']]
+                        entry['base_prompt'] = mhj_entry.get('base_prompt', '')
+                        entry['num_turns'] = mhj_entry.get('num_turns', 0)
+                        entry['turn_type'] = mhj_entry.get('turn_type', '')
+                        entry['source'] = mhj_entry.get('source', 'MHJ')
 
             entries_done += 1
 
