@@ -24,5 +24,11 @@ pyyaml
 psutil
 scipy
 
+# API and web dependencies (from requirements.txt)
+openai>=1.0.0
+aiohttp>=3.8.0
+pandas
+openpyxl
+
 # For flash attention (optional)
 # flash-attn>=2.0.0  # Uncomment if CUDA toolkit is available

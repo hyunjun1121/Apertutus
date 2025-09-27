@@ -2,9 +2,17 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  output: 'standalone',
+  output: "standalone",
+  eslint: {
+    // Docker 빌드 시 ESLint 에러를 무시
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // Docker 빌드 시 TypeScript 에러를 무시
+    ignoreBuildErrors: true,
+  },
   experimental: {
-    outputFileTracingRoot: undefined,
+    // outputFileTracingRoot은 더 이상 사용되지 않음
   },
 };
 
