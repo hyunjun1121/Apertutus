@@ -35,6 +35,13 @@ Apertutus is a comprehensive system for testing AI model safety across multiple 
 
 - Multi-turn Human Jailbreaks (MHJ)[^1]
 
+## Results
+
+The results are obtained when using Apertus as the input LLM.
+- Figures: Apertutus\paper_figures
+- Tables: Apertutus\paper_tables
+![](paper_figures/figure1_language_comparison.png)
+
 ## Installation
 
 ```bash
