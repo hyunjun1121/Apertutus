@@ -26,7 +26,7 @@ echo -e "\n[Step 2] Creating config for 8B model..."
 cat > apertus_8b_config_${TIMESTAMP}.yaml << EOF
 # Model - Apertus 8B
 model_name_or_path: swiss-ai/Apertus-8B-Instruct-2509
-torch_dtype: float16
+dtype: float16  # Changed from torch_dtype (deprecated)
 attn_implementation: eager
 load_in_8bit: true  # 8-bit quantization to save memory
 
