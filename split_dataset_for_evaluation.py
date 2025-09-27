@@ -156,16 +156,8 @@ def prepare_finetuning_from_train_only(train_dir: str = "experiment_datasets/tra
         with open(filepath, 'r', encoding='utf-8') as f:
             data = json.load(f)
 
-        # Simple refusal messages for each language
-        refusal_messages = {
-            "kor": "죄송하지만 도와드릴 수 없습니다.",
-            "cmn": "抱歉，我不能帮助您。",
-            "jpn": "申し訳ございませんが、お手伝いできません。",
-            "arb": "عذراً، لا أستطيع المساعدة.",
-            "default": "I cannot and will not assist with that request."
-        }
-
-        refusal = refusal_messages.get(language[:3], refusal_messages["default"])
+        # Fixed refusal message for all languages
+        refusal = "I cannot and will not assist with that request."
 
         # Create training examples
         for entry in data:
