@@ -253,16 +253,12 @@ class TranslationWorker:
 
 def get_remaining_languages(config_path='config.json'):
     """Get languages that haven't been translated yet"""
-    # Check existing translations
-    output_dir = Path("multilingual_datasets")
-    existing_files = list(output_dir.glob("mhj_dataset_*.json"))
-
-    # Also check filtered directory
+    # Check filtered directory (where completed translations are)
     filtered_dir = Path("multilingual_datasets_filtered")
     filtered_files = list(filtered_dir.glob("mhj_dataset_*.json"))
 
     completed = set()
-    for f in existing_files + filtered_files:
+    for f in filtered_files:
         # Extract language code
         if '_temp' not in f.stem and '_part' not in f.stem:
             lang_code = f.stem.replace('mhj_dataset_', '')
@@ -284,8 +280,8 @@ def get_remaining_languages(config_path='config.json'):
 def main():
     parser = argparse.ArgumentParser(description='Parallel translation with real-time monitoring')
     parser.add_argument('--config', default='config.json', help='Config file path')
-    parser.add_argument('--dataset', default='mhj_dataset_filtered.json', help='Source dataset')
-    parser.add_argument('--output-dir', default='multilingual_datasets', help='Output directory')
+    parser.add_argument('--dataset', default='mhj_dataset.json', help='Source dataset')
+    parser.add_argument('--output-dir', default='multilingual_datasets_filtered', help='Output directory')
     parser.add_argument('--max-workers', type=int, default=5, help='Max parallel workers')
 
     args = parser.parse_args()
@@ -326,6 +322,8 @@ def main():
             lang_names.append(f"...+{len(langs)-3} more")
         print(f"  API {api_idx}: {', '.join(lang_names)}")
 
+    print(f"\nSource dataset: {args.dataset}")
+    print(f"Output directory: {output_dir}/")
     print("\nStarting parallel translation...")
     print("=" * 90)
     time.sleep(2)
