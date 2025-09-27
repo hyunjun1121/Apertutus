@@ -89,9 +89,9 @@ multilingual_datasets/      # Translated datasets
 └── ...
 
 evaluation_results/        # Test results
-├── evaluation_results_eng.Latn.json
-├── evaluation_results_kor.Hang.json
-├── summary_report.json
+├── arb.Arab_evaluated.json
+├── ces.Latn_evaluated.json
+├── cmn.Hani_evaluated.json
 └── ...
 ```
 
