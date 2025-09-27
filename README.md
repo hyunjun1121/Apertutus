@@ -112,3 +112,5 @@ safety_test_results/        # Test results
 
 ### References
 [^1]: Li, N., Han, Z., Steneker, I., Primack, W., Goodside, R., Zhang, H., ... & Yue, S. (2024). *LLM Defenses Are Not Robust to Multi-Turn Human Jailbreaks Yet*. arXiv preprint arXiv:2408.15221. https://arxiv.org/abs/2408.15221
+[^2]: Hernández-Cano, A., Hägele, A., Huang, A. H., Romanou, A., Solergibert, A. J., Pasztor, B., ... & Schlag, I. (2025). Apertus: Democratizing Open and Compliant LLMs for Global Language Environments. arXiv preprint arXiv:2509.14233. https://arxiv.org/abs/2509.14233
+[^3]: Penedo, G., Kydlíček, H., Sabolčec, V., Messmer, B., Foroutan, N., Kargaran, A. H., ... & Wolf, T. (2025). FineWeb2: One Pipeline to Scale Them All -- Adapting Pre-Training Data Processing to Every Language. arXiv preprint arXiv:2506.20920. https://arxiv.org/abs/2506.20920
