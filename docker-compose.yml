@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # Python backend for running safety tests and translations
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: apertutus-backend
+    volumes:
+      # Mount config file for API keys
+      - ./config.json:/app/config.json:ro
+      # Mount data directories for persistence
+      - ./multilingual_datasets:/app/multilingual_datasets
+      - ./multilingual_datasets_filtered:/app/multilingual_datasets_filtered
+      - ./final_results:/app/final_results
+      - ./evaluation_results:/app/evaluation_results
+      - ./llm_responses:/app/llm_responses
+      - ./logs:/app/logs
+      - ./outputs:/app/outputs
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    networks:
+      - apertutus-network
+    # Keep container running for interactive use
+    tty: true
+    stdin_open: true
+
+  # Next.js frontend dashboard
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: apertutus-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - apertutus-network
+    depends_on:
+      - backend
+
+networks:
+  apertutus-network:
+    driver: bridge
+
+volumes:
+  apertutus-data:

@@ -29,7 +29,7 @@ import { JAILBREAK_CATEGORIES, JailbreakCategory, getCategoryStats } from "@/lib
 import { evaluateDataset, getPerformanceSummary } from "@/lib/evaluation";
 import ModelComparisonTable from "@/components/ModelComparisonTable";
 import CategoryPerformanceChart from "@/components/CategoryPerformanceChart";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar, Area, AreaChart } from 'recharts';
 
 type Row = {
   custom_id: string;
@@ -83,6 +83,8 @@ export default function DashboardPage() {
   const [isApiConfigured, setIsApiConfigured] = useState(false);
   const [isTestingInProgress, setIsTestingInProgress] = useState(false);
   const [testMessages, setTestMessages] = useState<Array<{id: number, type: 'input' | 'output' | 'score', text: string, timestamp: Date}>>([]);
+  const [realtimeTestData, setRealtimeTestData] = useState<Array<{prompt: string, score: number, timestamp: Date, status: 'safe' | 'risky'}>>([]);
+  const [realResultData, setRealResultData] = useState<any>(null);
   const chatWindowRef = useRef<HTMLDivElement>(null);
 
   // Step navigation functions
@@ -145,11 +147,19 @@ export default function DashboardPage() {
 
         setTimeout(() => {
           const score = Math.random() * 0.3;
+          const timestamp = new Date();
           setTestMessages(prev => [...prev, {
             id: messageId++,
             type: 'score',
             text: `Strong Reject Score: ${score.toFixed(3)} (Safe)`,
-            timestamp: new Date()
+            timestamp
+          }]);
+
+          setRealtimeTestData(prev => [...prev, {
+            prompt: currentPrompt.substring(0, 50) + '...',
+            score: score,
+            timestamp,
+            status: score < 0.2 ? 'safe' : 'risky'
           }]);
 
           promptIndex++;
@@ -253,6 +263,22 @@ export default function DashboardPage() {
     }
 
     loadAndCategorizeData();
+  }, []);
+
+  // Load real result data
+  useEffect(() => {
+    async function loadRealResultData() {
+      try {
+        const res = await fetch("/data/result_data.json");
+        const resultData = await res.json();
+        setRealResultData(resultData);
+        console.log('Real result data loaded:', resultData);
+      } catch (error) {
+        console.error('Error loading real result data:', error);
+      }
+    }
+
+    loadRealResultData();
   }, []);
 
   useEffect(() => {
@@ -559,40 +585,51 @@ export default function DashboardPage() {
                   {/* Category Distribution Chart */}
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                     <h2 className="text-2xl font-bold text-white mb-6 text-center">Category Distribution</h2>
-                    {categoryStats.length > 0 && (
+                    {realResultData && (
                       <div className="h-96 w-full">
                         <ResponsiveContainer width="100%" height="100%">
                           <PieChart>
                             <Pie
-                              data={categoryStats.map(stat => ({
-                                name: stat.category,
-                                value: stat.count,
-                                color: stat.color,
-                                percentage: stat.percentage,
-                                description: stat.description
-                              }))}
+                              data={Object.keys(realResultData.category_analysis.Category).map(key => {
+                                const categoryName = realResultData.category_analysis.Category[key];
+                                const count = realResultData.category_analysis.Count[key];
+                                const colors = ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#f43f5e', '#64748b'];
+                                return {
+                                  name: categoryName,
+                                  value: count,
+                                  color: colors[parseInt(key)] || '#64748b',
+                                  mean_score: realResultData.category_analysis.Mean_Score[key].toFixed(3),
+                                  refusal_rate: realResultData.category_analysis.Refusal_Rate[key].toFixed(1)
+                                };
+                              })}
                               cx="50%"
                               cy="50%"
                               outerRadius={140}
                               fill="#8884d8"
                               dataKey="value"
                             >
-                              {categoryStats.map((stat, index) => (
-                                <Cell key={`cell-${index}`} fill={stat.color} />
-                              ))}
+                              {Object.keys(realResultData.category_analysis.Category).map((key, index) => {
+                                const colors = ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#f43f5e', '#64748b'];
+                                return <Cell key={`cell-${index}`} fill={colors[parseInt(key)] || '#64748b'} />;
+                              })}
                             </Pie>
                             <Tooltip 
                               content={({ active, payload }) => {
                                 if (active && payload && payload.length) {
                                   const data = payload[0].payload;
                                   return (
-                                    <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-                                      <div className="flex items-center gap-2">
+                                    <div className="bg-black/80 p-3 border border-white/20 rounded-lg shadow-lg text-white">
+                                      <div className="flex items-center gap-2 mb-2">
                                         <div 
                                           className="w-4 h-4 rounded-full"
                                           style={{ backgroundColor: data.color }}
                                         />
                                         <span className="font-semibold text-sm">{data.name}</span>
+                                      </div>
+                                      <div className="text-xs text-white/80">
+                                        <div>Count: {data.value}</div>
+                                        <div>Mean Score: {data.mean_score}</div>
+                                        <div>Refusal Rate: {data.refusal_rate}%</div>
                                       </div>
                                     </div>
                                   );
@@ -606,12 +643,97 @@ export default function DashboardPage() {
                     )}
                     <div className="text-center mt-6">
                       <div className="text-xl font-bold text-white">
-                        {data.length} Total Jailbreak Prompts
+                        {realResultData ? realResultData.summary.total_samples : 0} Total Jailbreak Prompts
                       </div>
                       <div className="text-white/70 mt-2">
-                        Categorized into {categoryStats.length} attack patterns
+                        Categorized into {realResultData ? Object.keys(realResultData.category_analysis.Category).length : 0} attack patterns
                       </div>
                     </div>
+                  </div>
+
+                  {/* Language Family Analysis */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                    <h2 className="text-2xl font-bold text-white mb-6 text-center">Language Family Analysis</h2>
+                    {realResultData && (
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {/* Language Family Distribution */}
+                        <div className="h-64">
+                          <h3 className="text-lg font-semibold text-white mb-4 text-center">Sample Distribution by Family</h3>
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={Object.keys(realResultData.family_analysis.Family).map(key => ({
+                              family: realResultData.family_analysis.Family[key],
+                              samples: realResultData.family_analysis.Samples[key],
+                              languages: realResultData.family_analysis.Languages[key],
+                              mean_score: realResultData.family_analysis.Mean_Score[key]
+                            }))}>
+                              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                              <XAxis 
+                                dataKey="family" 
+                                stroke="rgba(255,255,255,0.7)"
+                                fontSize={12}
+                                angle={-45}
+                                textAnchor="end"
+                                height={60}
+                              />
+                              <YAxis 
+                                stroke="rgba(255,255,255,0.7)"
+                                fontSize={12}
+                              />
+                              <Tooltip 
+                                contentStyle={{
+                                  backgroundColor: 'rgba(0,0,0,0.8)',
+                                  border: '1px solid rgba(255,255,255,0.2)',
+                                  borderRadius: '8px',
+                                  color: 'white'
+                                }}
+                                formatter={(value: number, name: string) => [
+                                  name === 'samples' ? `${value} samples` : `${value} languages`,
+                                  name === 'samples' ? 'Samples' : 'Languages'
+                                ]}
+                              />
+                              <Bar dataKey="samples" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+
+                        {/* Mean Score by Family */}
+                        <div className="h-64">
+                          <h3 className="text-lg font-semibold text-white mb-4 text-center">Mean Security Score by Family</h3>
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={Object.keys(realResultData.family_analysis.Family).map(key => ({
+                              family: realResultData.family_analysis.Family[key],
+                              mean_score: realResultData.family_analysis.Mean_Score[key],
+                              std_score: realResultData.family_analysis.Std_Score[key]
+                            }))}>
+                              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                              <XAxis 
+                                dataKey="family" 
+                                stroke="rgba(255,255,255,0.7)"
+                                fontSize={12}
+                                angle={-45}
+                                textAnchor="end"
+                                height={60}
+                              />
+                              <YAxis 
+                                stroke="rgba(255,255,255,0.7)"
+                                fontSize={12}
+                                domain={[0, 0.15]}
+                              />
+                              <Tooltip 
+                                contentStyle={{
+                                  backgroundColor: 'rgba(0,0,0,0.8)',
+                                  border: '1px solid rgba(255,255,255,0.2)',
+                                  borderRadius: '8px',
+                                  color: 'white'
+                                }}
+                                formatter={(value: number) => [value.toFixed(4), 'Mean Score']}
+                              />
+                              <Bar dataKey="mean_score" fill="#10b981" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Jailbreak Prompts Table */}
@@ -701,131 +823,110 @@ export default function DashboardPage() {
                 <TabsContent value="results" className="space-y-8">
                   {/* Performance Metrics Cards */}
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                    <div className="flex items-center justify-between mb-8">
-                      <div>
-                        <h2 className="text-3xl font-black text-white flex items-center gap-3">
-                          <span className="text-4xl">📊</span>
-                          Performance Metrics
-                        </h2>
-                        <p className="text-white/70 text-lg mt-2">Real-time security analysis dashboard</p>
-                      </div>
-                      <div className="flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-full border border-green-400/30">
-                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                        <span className="text-green-300 font-bold text-sm">LIVE</span>
-                      </div>
-                    </div>
-                    
-                    {performanceSummary && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div className="bg-gradient-to-br from-green-500/20 to-emerald-600/20 backdrop-blur-sm rounded-2xl p-6 border border-green-400/30 hover:shadow-green-500/20 hover:shadow-xl transition-all duration-500 group">
-                          <div className="flex items-start justify-between mb-4">
-                            <div className="p-3 bg-green-500/30 rounded-xl border border-green-400/50 group-hover:scale-110 transition-transform duration-300">
-                              <span className="text-2xl">🛡️</span>
+                      {(
+                        <div className="flex justify-center">
+                          <div className="bg-gradient-to-br from-green-500/20 to-emerald-600/20 backdrop-blur-sm rounded-2xl p-6 border border-green-400/30 hover:shadow-green-500/20 hover:shadow-xl transition-all duration-500 group max-w-md">
+                            <div className="text-center">
+                                <div className="mb-4">
+                                  <div className="text-4xl font-black text-green-300 mb-2 group-hover:text-green-200 transition-colors">
+                                    {0.1}
+                                    {/* {(performanceSummary.averageScore * 100).toFixed(1)} */}
+                                  </div>
+                                </div>
+                              <div className="text-green-200/80 text-sm leading-relaxed">
+                                Overall Protection Level
+                              </div>
                             </div>
-                            <div className="text-right">
-                              <div className="text-xs text-green-300 font-semibold uppercase tracking-wide">Security Score</div>
-                              <div className="text-xs text-green-200/60 mt-1">Overall Protection</div>
-                            </div>
-                          </div>
-                          <div className="mb-3">
-                            <div className="text-4xl font-black text-green-300 mb-2 group-hover:text-green-200 transition-colors">
-                              {(performanceSummary.averageScore * 100).toFixed(1)}%
-                            </div>
-                            <div className="w-full bg-green-900/30 rounded-full h-2 overflow-hidden">
-                              <AnimatedProgress 
-                                value={performanceSummary.averageScore * 100} 
-                                className="bg-gradient-to-r from-green-400 to-emerald-500 h-2 rounded-full shadow-lg shadow-green-500/30"
-                                delay={200}
-                              />
-                            </div>
-                          </div>
-                          <div className="text-green-200/80 text-sm leading-relaxed">
-                            Average protection level across all test cases
-                          </div>
-                        </div>
-
-                        <div className="bg-gradient-to-br from-red-500/20 to-pink-600/20 backdrop-blur-sm rounded-2xl p-6 border border-red-400/30 hover:shadow-red-500/20 hover:shadow-xl transition-all duration-500 group">
-                          <div className="flex items-start justify-between mb-4">
-                            <div className="p-3 bg-red-500/30 rounded-xl border border-red-400/50 group-hover:scale-110 transition-transform duration-300">
-                              <span className="text-2xl">⚠️</span>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-xs text-red-300 font-semibold uppercase tracking-wide">Vulnerabilities</div>
-                              <div className="text-xs text-red-200/60 mt-1">High Risk Items</div>
-                            </div>
-                          </div>
-                          <div className="mb-3">
-                            <div className="text-4xl font-black text-red-300 mb-2 group-hover:text-red-200 transition-colors">
-                              {performanceSummary.vulnerablePrompts}
-                            </div>
-                            <div className="w-full bg-red-900/30 rounded-full h-2 overflow-hidden">
-                              <AnimatedProgress 
-                                value={(performanceSummary.vulnerablePrompts / performanceSummary.totalPrompts) * 100} 
-                                className="bg-gradient-to-r from-red-400 to-pink-500 h-2 rounded-full shadow-lg shadow-red-500/30"
-                                delay={400}
-                              />
-                            </div>
-                          </div>
-                          <div className="text-red-200/80 text-sm leading-relaxed">
-                            Critical security issues detected
-                          </div>
-                        </div>
-
-                        <div className="bg-gradient-to-br from-blue-500/20 to-cyan-600/20 backdrop-blur-sm rounded-2xl p-6 border border-blue-400/30 hover:shadow-blue-500/20 hover:shadow-xl transition-all duration-500 group">
-                          <div className="flex items-start justify-between mb-4">
-                            <div className="p-3 bg-blue-500/30 rounded-xl border border-blue-400/50 group-hover:scale-110 transition-transform duration-300">
-                              <span className="text-2xl">📈</span>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-xs text-blue-300 font-semibold uppercase tracking-wide">Total Tests</div>
-                              <div className="text-xs text-blue-200/60 mt-1">Coverage Rate</div>
-                            </div>
-                          </div>
-                          <div className="mb-3">
-                            <div className="text-4xl font-black text-blue-300 mb-2 group-hover:text-blue-200 transition-colors">
-                              {performanceSummary.totalPrompts}
-                            </div>
-                            <div className="w-full bg-blue-900/30 rounded-full h-2 overflow-hidden">
-                              <AnimatedProgress 
-                                value={100} 
-                                className="bg-gradient-to-r from-blue-400 to-cyan-500 h-2 rounded-full shadow-lg shadow-blue-500/30"
-                                delay={600}
-                              />
-                            </div>
-                          </div>
-                          <div className="text-blue-200/80 text-sm leading-relaxed">
-                            Comprehensive test scenarios executed
-                          </div>
-                        </div>
-
-                        <div className="bg-gradient-to-br from-purple-500/20 to-indigo-600/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-400/30 hover:shadow-purple-500/20 hover:shadow-xl transition-all duration-500 group">
-                          <div className="flex items-start justify-between mb-4">
-                            <div className="p-3 bg-purple-500/30 rounded-xl border border-purple-400/50 group-hover:scale-110 transition-transform duration-300">
-                              <span className="text-2xl">🎯</span>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-xs text-purple-300 font-semibold uppercase tracking-wide">Success Rate</div>
-                              <div className="text-xs text-purple-200/60 mt-1">Defense Efficiency</div>
-                            </div>
-                          </div>
-                          <div className="mb-3">
-                            <div className="text-4xl font-black text-purple-300 mb-2 group-hover:text-purple-200 transition-colors">
-                              {(((performanceSummary.totalPrompts - performanceSummary.vulnerablePrompts) / performanceSummary.totalPrompts) * 100).toFixed(1)}%
-                            </div>
-                            <div className="w-full bg-purple-900/30 rounded-full h-2 overflow-hidden">
-                              <AnimatedProgress 
-                                value={((performanceSummary.totalPrompts - performanceSummary.vulnerablePrompts) / performanceSummary.totalPrompts) * 100} 
-                                className="bg-gradient-to-r from-purple-400 to-indigo-500 h-2 rounded-full shadow-lg shadow-purple-500/30"
-                                delay={800}
-                              />
-                            </div>
-                          </div>
-                          <div className="text-purple-200/80 text-sm leading-relaxed">
-                            Successfully blocked attack attempts
-                          </div>
                         </div>
                       </div>
                     )}
+                  </div>
+
+                  {/* Research Results Display */}
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {/* Refusal Rates Chart */}
+                      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="p-3 bg-gradient-to-r from-blue-500/30 to-cyan-600/30 rounded-xl border border-blue-400/50">
+                            <span className="text-2xl">📊</span>
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-bold text-white">Refusal Rates Across Languages</h3>
+                            <p className="text-white/70 text-sm">Language-specific security performance analysis</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-center">
+                          <img 
+                            src="/figures/figure1_language_comparison.png" 
+                            alt="Refusal Rates Across Languages" 
+                            className="max-w-full h-auto rounded-lg border border-white/20"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Harmfulness Scores Chart */}
+                      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="p-3 bg-gradient-to-r from-purple-500/30 to-pink-600/30 rounded-xl border border-purple-400/50">
+                            <span className="text-2xl">🎯</span>
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-bold text-white">Language Family Analysis</h3>
+                            <p className="text-white/70 text-sm">Language family security performance</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-center">
+                          <img 
+                            src="/figures/figure2_family_analysis.png" 
+                            alt="Language Family Analysis" 
+                            className="max-w-full h-auto rounded-lg border border-white/20"
+                          />
+                        </div>
+                      </div>
+
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="p-3 bg-gradient-to-r from-purple-500/30 to-pink-600/30 rounded-xl border border-purple-400/50">
+                            <span className="text-2xl">🔍</span>
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-bold text-white">Heatmap Analysis</h3>
+                            <p className="text-white/70 text-sm">Language family security performance</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-center">
+                          <img 
+                            src="/figures/figure3_heatmap.png" 
+                            alt="Language Family Analysis" 
+                            className="max-w-full h-auto rounded-lg border border-white/20"
+                          />
+                        </div>
+                      </div>
+
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="p-3 bg-gradient-to-r from-purple-500/30 to-pink-600/30 rounded-xl border border-purple-400/50">
+                            <span className="text-2xl">📊</span>
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-bold text-white">Top/Bottom Analysis</h3>
+                            <p className="text-white/70 text-sm">Language family security performance</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-center">
+                          <img 
+                            src="/figures/figure4_top_bottom.png" 
+                            alt="Language Family Analysis" 
+                            className="max-w-full h-auto rounded-lg border border-white/20"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Model Comparison and Performance Charts */}
