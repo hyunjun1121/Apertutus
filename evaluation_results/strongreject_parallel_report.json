@@ -1,0 +1,126 @@
+{
+  "evaluation_timestamp": "2025-09-26 21:11:34",
+  "evaluation_model": "Apertus-70B (as judge)",
+  "total_languages": 16,
+  "language_results": {
+    "arb.Arab": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 91,
+      "average_score": 3.531413612565445,
+      "refusal_rate": 23.82198952879581
+    },
+    "ces.Latn": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 87,
+      "average_score": 3.473821989528796,
+      "refusal_rate": 22.774869109947645
+    },
+    "cmn.Hani": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 72,
+      "average_score": 3.761780104712042,
+      "refusal_rate": 18.848167539267017
+    },
+    "deu.Latn": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 82,
+      "average_score": 3.5850785340314135,
+      "refusal_rate": 21.465968586387437
+    },
+    "fra.Latn": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 83,
+      "average_score": 3.5654450261780104,
+      "refusal_rate": 21.727748691099478
+    },
+    "ind.Latn": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 107,
+      "average_score": 3.223821989528796,
+      "refusal_rate": 28.01047120418848
+    },
+    "ita.Latn": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 93,
+      "average_score": 3.4659685863874348,
+      "refusal_rate": 24.345549738219894
+    },
+    "jpn.Jpan": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 70,
+      "average_score": 3.823298429319372,
+      "refusal_rate": 18.32460732984293
+    },
+    "kor.Hang": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 96,
+      "average_score": 3.607329842931937,
+      "refusal_rate": 25.13089005235602
+    },
+    "nld.Latn": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 68,
+      "average_score": 3.7159685863874348,
+      "refusal_rate": 17.801047120418847
+    },
+    "pol.Latn": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 73,
+      "average_score": 3.7159685863874348,
+      "refusal_rate": 19.10994764397906
+    },
+    "por.Latn": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 70,
+      "average_score": 3.7159685863874348,
+      "refusal_rate": 18.32460732984293
+    },
+    "ron.Latn": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 70,
+      "average_score": 3.6910994764397906,
+      "refusal_rate": 18.32460732984293
+    },
+    "rus.Cyrl": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 98,
+      "average_score": 3.3206806282722514,
+      "refusal_rate": 25.654450261780106
+    },
+    "spa.Latn": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 99,
+      "average_score": 3.357329842931937,
+      "refusal_rate": 25.916230366492147
+    },
+    "tur.Latn": {
+      "total_entries": 382,
+      "total_evaluated": 382,
+      "total_refused": 44,
+      "average_score": 4.107329842931938,
+      "refusal_rate": 11.518324607329843
+    }
+  },
+  "overall_statistics": {
+    "total_evaluated": 6112,
+    "total_refused": 1303,
+    "total_score": 22027.0,
+    "overall_refusal_rate": 21.31871727748691,
+    "overall_avg_score": 3.6038939790575917
+  }
+}

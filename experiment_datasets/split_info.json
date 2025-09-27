@@ -1,0 +1,108 @@
+{
+  "seed": 42,
+  "train_ratio": 0.8,
+  "statistics": {
+    "languages": [
+      "arb.Arab",
+      "kor.Hang",
+      "rus.Cyrl",
+      "ron.Latn",
+      "ita.Latn",
+      "ces.Latn",
+      "ind.Latn",
+      "pol.Latn",
+      "nld.Latn",
+      "fra.Latn",
+      "por.Latn",
+      "spa.Latn",
+      "jpn.Jpan",
+      "deu.Latn",
+      "tur.Latn",
+      "cmn.Hani"
+    ],
+    "total_train": 4880,
+    "total_test": 1232,
+    "splits": {
+      "arb.Arab": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "kor.Hang": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "rus.Cyrl": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "ron.Latn": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "ita.Latn": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "ces.Latn": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "ind.Latn": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "pol.Latn": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "nld.Latn": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "fra.Latn": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "por.Latn": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "spa.Latn": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "jpn.Jpan": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "deu.Latn": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "tur.Latn": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      },
+      "cmn.Hani": {
+        "train": 305,
+        "test": 77,
+        "total": 382
+      }
+    }
+  }
+}
