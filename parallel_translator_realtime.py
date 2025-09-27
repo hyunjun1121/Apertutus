@@ -251,6 +251,19 @@ class TranslationWorker:
         return translated_entries
 
 
+def process_languages_for_api(worker, languages, dataset, output_dir):
+    """Process all languages assigned to one API worker"""
+    results = []
+    for language in languages:
+        try:
+            result = worker.translate_language(language, dataset, output_dir)
+            results.append((language['code'], 'success', result))
+        except Exception as e:
+            print(f"\n[API {worker.api_index}] Error with {language['code']}: {e}")
+            results.append((language['code'], 'error', str(e)))
+    return results
+
+
 def get_remaining_languages(config_path='config.json'):
     """Get languages that haven't been translated yet"""
     # Check filtered directory (where completed translations are)
@@ -328,29 +341,34 @@ def main():
     print("=" * 90)
     time.sleep(2)
 
-    # Start parallel translation
+    # Start parallel translation - Each API gets its own worker
     with ThreadPoolExecutor(max_workers=args.max_workers) as executor:
         futures = []
 
-        for api_idx, languages in api_assignments.items():
-            if api_idx < len(api_keys):
+        # Create a worker for each API and process its languages
+        for api_idx in range(min(len(api_keys), args.max_workers)):
+            if api_idx in api_assignments:
+                # Each API processes its assigned languages independently
                 worker = TranslationWorker(api_keys[api_idx], api_idx)
+                languages_for_api = api_assignments[api_idx]
 
-                for language in languages:
-                    future = executor.submit(
-                        worker.translate_language,
-                        language,
-                        dataset,
-                        output_dir
-                    )
-                    futures.append((future, language['code']))
+                # Submit the entire language list for this API
+                future = executor.submit(
+                    process_languages_for_api,
+                    worker,
+                    languages_for_api,
+                    dataset,
+                    output_dir
+                )
+                futures.append((future, api_idx))
 
         # Wait for completion
-        for future, lang_code in futures:
+        for future, api_idx in futures:
             try:
-                future.result()
+                results = future.result()
+                print(f"\n[API {api_idx}] Completed all assigned languages")
             except Exception as e:
-                print(f"\nError processing {lang_code}: {e}")
+                print(f"\n[API {api_idx}] Error: {e}")
 
     print("\n" + "=" * 90)
     print("✅ TRANSLATION COMPLETE!")
