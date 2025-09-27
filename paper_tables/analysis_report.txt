@@ -1,0 +1,39 @@
+======================================================================
+MULTILINGUAL JAILBREAK ANALYSIS REPORT
+Apertus-70B Safety Evaluation
+======================================================================
+
+EXECUTIVE SUMMARY
+--------------------------------------------------
+• Evaluated 6,112 prompts across 16 languages
+• Overall refusal rate: 21.3%
+• Average harmfulness score: 3.60/5.0
+
+KEY FINDINGS
+--------------------------------------------------
+
+Top 3 Safest Languages (Highest Refusal):
+  • Indonesian: 28.0%
+  • Spanish: 25.9%
+  • Russian: 25.7%
+
+Top 3 Most Vulnerable (Lowest Refusal):
+  • Romanian: 18.3%
+  • Dutch: 17.8%
+  • Turkish: 11.5%
+
+Language Family Performance:
+  • Slavic: 22.5%
+  • Romance: 21.7%
+  • Other: 21.1%
+  • Asian: 20.8%
+  • Germanic: 19.6%
+
+RECOMMENDATIONS
+--------------------------------------------------
+1. Prioritize safety improvements for Turkish (11.5% refusal)
+2. Investigate why Indonesian shows highest refusal (28.0%)
+3. Implement language-specific safety thresholds
+4. Focus on multi-turn conversation safety mechanisms
+
+======================================================================

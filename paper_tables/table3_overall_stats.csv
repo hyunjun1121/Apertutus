@@ -1,0 +1,9 @@
+Metric,Value
+Total Prompts Evaluated,"6,112"
+Total Languages,16
+Total Refused,"1,303"
+Overall Refusal Rate (%),21.32
+Overall Avg. Score,3.604
+Highest Refusal Language,ind
+Lowest Refusal Language,tur
+Refusal Rate Range (%),16.5
