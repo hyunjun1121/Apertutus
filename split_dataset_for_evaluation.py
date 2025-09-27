@@ -119,19 +119,119 @@ def prepare_finetuning_from_train_only(train_dir: str = "experiment_datasets/tra
     Prepare fine-tuning dataset using ONLY training data
     Test data is kept completely separate
     """
-    from prepare_safety_finetuning import SafetyFinetuningPreparer
+    from pathlib import Path
+    import json
+    import random
+    from datetime import datetime
 
     print("\n" + "=" * 60)
     print("PREPARING FINE-TUNING DATASET FROM TRAIN SPLIT ONLY")
     print("=" * 60)
 
-    preparer = SafetyFinetuningPreparer(
-        source_dir=train_dir,
-        output_dir=output_dir
-    )
+    train_path = Path(train_dir)
+    output_path = Path(output_dir)
+    output_path.mkdir(exist_ok=True)
 
-    # Process only training data
-    result = preparer.prepare_all_languages(train_split=1.0)  # No validation split needed
+    # Check if train directory exists
+    if not train_path.exists():
+        print(f"ERROR: Train directory not found: {train_path}")
+        return None
+
+    # Find all train files
+    train_files = list(train_path.glob("mhj_dataset_*_train.json"))
+    print(f"Found {len(train_files)} training files")
+
+    if len(train_files) == 0:
+        print("ERROR: No training files found!")
+        print(f"Looking in: {train_path}")
+        return None
+
+    # Prepare safety finetuning examples
+    all_examples = []
+
+    for filepath in train_files:
+        language = filepath.stem.split('_')[2]  # Get language code
+        print(f"Processing {language}...")
+
+        with open(filepath, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        # Simple refusal messages for each language
+        refusal_messages = {
+            "kor": "죄송하지만 도와드릴 수 없습니다.",
+            "cmn": "抱歉，我不能帮助您。",
+            "jpn": "申し訳ございませんが、お手伝いできません。",
+            "arb": "عذراً، لا أستطيع المساعدة.",
+            "default": "I cannot and will not assist with that request."
+        }
+
+        refusal = refusal_messages.get(language[:3], refusal_messages["default"])
+
+        # Create training examples
+        for entry in data:
+            turns = entry.get('turns', [])
+
+            # Single-turn examples
+            for turn in turns:
+                content = turn.get('content', '')
+                if content:
+                    example = {
+                        "messages": [
+                            {"role": "user", "content": content},
+                            {"role": "assistant", "content": refusal}
+                        ]
+                    }
+                    all_examples.append(example)
+
+    print(f"\nTotal examples created: {len(all_examples)}")
+
+    # Shuffle and split
+    random.seed(42)
+    random.shuffle(all_examples)
+
+    # 90/10 train/val split
+    split_idx = int(len(all_examples) * 0.9)
+    train_examples = all_examples[:split_idx]
+    val_examples = all_examples[split_idx:]
+
+    # Save files
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    train_file = output_path / f"safety_train_{timestamp}.jsonl"
+    val_file = output_path / f"safety_val_{timestamp}.jsonl"
+
+    # Write JSONL files
+    with open(train_file, 'w', encoding='utf-8') as f:
+        for ex in train_examples:
+            f.write(json.dumps(ex, ensure_ascii=False) + '\n')
+
+    with open(val_file, 'w', encoding='utf-8') as f:
+        for ex in val_examples:
+            f.write(json.dumps(ex, ensure_ascii=False) + '\n')
+
+    # Save statistics
+    stats = {
+        "languages": len(train_files),
+        "total_examples": len(all_examples),
+        "train_examples": len(train_examples),
+        "val_examples": len(val_examples),
+        "timestamp": timestamp
+    }
+
+    stats_file = output_path / f"safety_stats_{timestamp}.json"
+    with open(stats_file, 'w') as f:
+        json.dump(stats, f, indent=2)
+
+    print(f"\nFiles saved:")
+    print(f"  - Training: {train_file}")
+    print(f"  - Validation: {val_file}")
+    print(f"  - Statistics: {stats_file}")
+
+    result = {
+        "train_file": str(train_file),
+        "val_file": str(val_file),
+        "stats": stats
+    }
 
     print("\nIMPORTANT: Test data in 'experiment_datasets/test/' is NOT used for training!")
     print("This ensures unbiased evaluation.")
