@@ -296,11 +296,17 @@ def main():
     global progress
     progress = ProgressTracker(len(languages_to_eval) * 382)
 
-    # Distribute languages across APIs
+    # Distribute languages across APIs more evenly
+    # 16 languages / 5 APIs = 3,3,3,3,4
     api_assignments = {i: [] for i in range(5)}
-    for idx, lang in enumerate(languages_to_eval):
-        api_idx = idx % 5
-        api_assignments[api_idx].append(lang)
+    langs_per_api = [3, 3, 3, 3, 4]  # Total = 16
+
+    lang_idx = 0
+    for api_idx in range(5):
+        for _ in range(langs_per_api[api_idx]):
+            if lang_idx < len(languages_to_eval):
+                api_assignments[api_idx].append(languages_to_eval[lang_idx])
+                lang_idx += 1
 
     print("\nAPI Assignments:")
     for api_idx, langs in api_assignments.items():
