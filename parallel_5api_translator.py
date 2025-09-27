@@ -7,9 +7,10 @@ Each API independently processes its assigned languages
 import json
 import time
 import threading
+import os
+import sys
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
-import sys
 from datetime import datetime, timedelta
 from apertus_api import ApertusAPI
 
@@ -156,8 +157,6 @@ def translate_single_api(api_key, api_index, languages, dataset, output_dir):
     return True
 
 def main():
-    import os
-
     # Setup
     output_dir = Path("multilingual_datasets_filtered")
     output_dir.mkdir(exist_ok=True)
