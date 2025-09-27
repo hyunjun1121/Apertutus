@@ -1,0 +1,167 @@
+{
+  "individual_results": [
+    {
+      "file": "arb.Arab_complete.json",
+      "language": "arb.Arab",
+      "average_score": 0.5340314136125655,
+      "std_dev": 1.445391296159343,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "ces.Latn_complete.json",
+      "language": "ces.Latn",
+      "average_score": 0.31544502617801046,
+      "std_dev": 1.103586341172681,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "cmn.Hani_complete.json",
+      "language": "cmn.Hani",
+      "average_score": 0.3782722513089005,
+      "std_dev": 1.2049088728396895,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "deu.Latn_complete.json",
+      "language": "deu.Latn",
+      "average_score": 0.40575916230366493,
+      "std_dev": 1.2858547077456919,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "fra.Latn_complete.json",
+      "language": "fra.Latn",
+      "average_score": 0.3743455497382199,
+      "std_dev": 1.2177446606763873,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "ind.Latn_complete.json",
+      "language": "ind.Latn",
+      "average_score": 0.49476439790575916,
+      "std_dev": 1.358018198024992,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "ita.Latn_complete.json",
+      "language": "ita.Latn",
+      "average_score": 0.5052356020942408,
+      "std_dev": 1.4025869225761751,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "jpn.Jpan_complete.json",
+      "language": "jpn.Jpan",
+      "average_score": 0.3992146596858639,
+      "std_dev": 1.216024942477539,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "kor.Hang_complete.json",
+      "language": "kor.Hang",
+      "average_score": 0.32329842931937175,
+      "std_dev": 1.1346778540210918,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "nld.Latn_complete.json",
+      "language": "nld.Latn",
+      "average_score": 0.2761780104712042,
+      "std_dev": 0.9769774147009912,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "pol.Latn_complete.json",
+      "language": "pol.Latn",
+      "average_score": 0.3102094240837696,
+      "std_dev": 1.1296691162293917,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "por.Latn_complete.json",
+      "language": "por.Latn",
+      "average_score": 0.36649214659685864,
+      "std_dev": 1.1669433597703645,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "ron.Latn_complete.json",
+      "language": "ron.Latn",
+      "average_score": 0.4083769633507853,
+      "std_dev": 1.2758255655086388,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "rus.Cyrl_complete.json",
+      "language": "rus.Cyrl",
+      "average_score": 0.43455497382198954,
+      "std_dev": 1.3242244340329627,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "spa.Latn_complete.json",
+      "language": "spa.Latn",
+      "average_score": 0.3468586387434555,
+      "std_dev": 1.1540858787885282,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    },
+    {
+      "file": "tur.Latn_complete.json",
+      "language": "tur.Latn",
+      "average_score": 0.41361256544502617,
+      "std_dev": 1.2858973425390205,
+      "min_score": 0.0,
+      "max_score": 5.0,
+      "total_entries": 382
+    }
+  ],
+  "overall_average": 0.3929155759162304,
+  "ranking": [
+    "nld.Latn",
+    "pol.Latn",
+    "ces.Latn",
+    "kor.Hang",
+    "spa.Latn",
+    "por.Latn",
+    "fra.Latn",
+    "cmn.Hani",
+    "jpn.Jpan",
+    "deu.Latn",
+    "ron.Latn",
+    "tur.Latn",
+    "rus.Cyrl",
+    "ind.Latn",
+    "ita.Latn",
+    "arb.Arab"
+  ]
+}
