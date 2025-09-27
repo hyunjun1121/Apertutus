@@ -40,7 +40,9 @@ Apertutus is a comprehensive system for testing AI model safety across multiple 
 The results are obtained when using Apertus as the input LLM.
 - Figures: `Apertutus\final_figures`
 - Tables: `Apertutus\paper_tables`
-![](paper_figures/figure1_language_comparison.png)
+![](final_figures/figure1_language_ranking.png)
+![](final_figures/figure2_language_analysis.png)
+![](final_figures/figure2_category_analysis.png)
 
 ## Installation
 
