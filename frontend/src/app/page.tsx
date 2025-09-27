@@ -823,7 +823,7 @@ export default function DashboardPage() {
                 <TabsContent value="results" className="space-y-8">
                   {/* Performance Metrics Cards */}
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                      {realResultData && (
+                      {(
                         <div className="flex justify-center">
                           <div className="bg-gradient-to-br from-green-500/20 to-emerald-600/20 backdrop-blur-sm rounded-2xl p-6 border border-green-400/30 hover:shadow-green-500/20 hover:shadow-xl transition-all duration-500 group max-w-md">
                             <div className="text-center">
@@ -890,7 +890,7 @@ export default function DashboardPage() {
                     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                         <div className="flex items-center gap-3 mb-6">
                           <div className="p-3 bg-gradient-to-r from-purple-500/30 to-pink-600/30 rounded-xl border border-purple-400/50">
-                            <span className="text-2xl">🎯</span>
+                            <span className="text-2xl">🔍</span>
                           </div>
                           <div>
                             <h3 className="text-xl font-bold text-white">Heatmap Analysis</h3>
@@ -910,7 +910,7 @@ export default function DashboardPage() {
                     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                         <div className="flex items-center gap-3 mb-6">
                           <div className="p-3 bg-gradient-to-r from-purple-500/30 to-pink-600/30 rounded-xl border border-purple-400/50">
-                            <span className="text-2xl">🎯</span>
+                            <span className="text-2xl">📊</span>
                           </div>
                           <div>
                             <h3 className="text-xl font-bold text-white">Top/Bottom Analysis</h3>
