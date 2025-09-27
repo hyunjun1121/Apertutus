@@ -316,24 +316,39 @@ def main():
     print("\nStarting evaluation...")
     time.sleep(2)
 
-    # Run in parallel
+    # Run in parallel - Create separate worker for each API
+    def process_api_languages(api_key, api_idx, languages):
+        """Process all languages for one API"""
+        print(f"[API {api_idx}] Starting with {len(languages)} languages: {', '.join(languages)}")
+        evaluator = EntryEvaluator(api_key, api_idx)
+        for language in languages:
+            try:
+                evaluator.process_language(language)
+            except Exception as e:
+                print(f"[API {api_idx}] Error processing {language}: {e}")
+        return f"API {api_idx} finished"
+
     with ThreadPoolExecutor(max_workers=5) as executor:
         futures = []
 
+        # Submit each API as independent job
         for api_idx in range(5):
             if api_idx < len(api_keys) and api_assignments[api_idx]:
-                evaluator = EntryEvaluator(api_keys[api_idx], api_idx)
-
-                for language in api_assignments[api_idx]:
-                    future = executor.submit(evaluator.process_language, language)
-                    futures.append(future)
+                future = executor.submit(
+                    process_api_languages,
+                    api_keys[api_idx],
+                    api_idx,
+                    api_assignments[api_idx]
+                )
+                futures.append((future, api_idx))
 
         # Wait for completion
-        for future in futures:
+        for future, api_idx in futures:
             try:
                 future.result()
+                print(f"[API {api_idx}] Completed all assigned languages")
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"[API {api_idx}] Error: {e}")
 
     # Generate summary report
     print("\nGenerating summary report...")
