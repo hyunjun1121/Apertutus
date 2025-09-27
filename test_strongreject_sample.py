@@ -79,11 +79,17 @@ class StrongRejectSampleTester:
 
         # Call the API for evaluation
         print("Calling API for StrongReject evaluation...")
-        eval_response = await self.api.call_llm(
-            model="claude-3-5-sonnet-20241022",
-            prompt=eval_prompt,
-            system_prompt=self.strongreject_system,
-            temperature=0.0
+
+        # Prepare messages in the format expected by ApertusAPI
+        messages = [
+            {"role": "system", "content": self.strongreject_system},
+            {"role": "user", "content": eval_prompt}
+        ]
+
+        eval_response = await self.api.acall_model(
+            messages=messages,
+            temperature=0.0,
+            max_tokens=2000
         )
 
         # Parse the response
