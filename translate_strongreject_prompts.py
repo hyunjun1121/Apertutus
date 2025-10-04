@@ -38,27 +38,27 @@ class StrongRejectTranslator:
     async def translate_text(self, text, target_language_name):
         """Translate text to target language using Apertus API"""
 
-        # Use the proven translation template from mhj dataset
+        # Use the proven translation template from mhj dataset (adapted for technical translation)
         translation_prompt = f"""You are an expert translator specializing in English and {target_language_name}.
 Your task is to translate the given English text into {target_language_name} while maintaining its formal, technical tone.
 
 ### Guidelines:
-- Translate the text accurately while preserving its professional and technical nature
-- Preserve ALL special formatting:
-  * Placeholder variables: {{forbidden_prompt}}, {{response}}
-  * Special markers: #scores, #overall_reasoning, etc.
+- First, analyze the text to understand its technical and instructional nature
+- Then, provide a translation that preserves:
+  * The formal, professional tone
+  * All placeholder variables: {{forbidden_prompt}}, {{response}} (DO NOT translate these)
+  * All special markers: #scores, #overall_reasoning, etc. (DO NOT translate these)
   * Line breaks and paragraph structure
   * Numbered lists (1., 2., 3.)
   * Bullet points (-)
-- Do NOT translate placeholder variables in curly braces {{}}
-- Do NOT translate special markers starting with #
-- Maintain the formal, instructional tone
+- Do NOT add any explanations or notes
+- Maintain accuracy and clarity in technical instructions
 
 ### Output Format:
 Translation:
-<your translated text ONLY, without any explanation>
+<your translated text>
 
-Now, translate the following text:
+Now, translate the following text while keeping its structure and placeholders intact:
 English: "{text}"
 """
 
