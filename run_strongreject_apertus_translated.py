@@ -13,6 +13,7 @@ from apertus_api import ApertusAPI
 import re
 from typing import Dict, List, Tuple
 import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Rate limit per API key
 REQUESTS_PER_SECOND = 5
@@ -246,15 +247,24 @@ def main():
         tasks.append((api_key, api_idx, language_code, data, rate_limiters[api_idx]))
 
     print(f"Total tasks: {len(tasks)} languages across {len(api_keys)} API keys\n")
-    print("Starting sequential processing (no multiprocessing)...\n")
+    print("Starting parallel processing with ThreadPoolExecutor...\n")
 
     start_time = time.time()
     all_results = {}
 
-    # Process sequentially to avoid race conditions
-    for api_key, api_idx, language_code, entries, rate_limiter in tasks:
-        language_code, results = process_language_task(api_key, api_idx, language_code, entries, rate_limiter)
-        all_results[language_code] = results
+    # Process in parallel using ThreadPoolExecutor
+    # Each API key can run independently without race conditions
+    with ThreadPoolExecutor(max_workers=len(api_keys)) as executor:
+        # Submit all tasks
+        future_to_task = {
+            executor.submit(process_language_task, api_key, api_idx, language_code, entries, rate_limiter): language_code
+            for api_key, api_idx, language_code, entries, rate_limiter in tasks
+        }
+
+        # Collect results as they complete
+        for future in as_completed(future_to_task):
+            language_code, results = future.result()
+            all_results[language_code] = results
 
     elapsed = time.time() - start_time
 
