@@ -38,44 +38,53 @@ class StrongRejectTranslator:
     async def translate_text(self, text, target_language_name):
         """Translate text to target language using Apertus API"""
 
-        # Use a clear system prompt to set expectations
-        system_prompt = f"""You are a professional translator. Your task is to translate English text to {target_language_name}.
+        # Use the proven translation template from mhj dataset
+        translation_prompt = f"""You are an expert translator specializing in English and {target_language_name}.
+Your task is to translate the given English text into {target_language_name} while maintaining its formal, technical tone.
 
-CRITICAL RULES:
-1. Output ONLY the translated text
-2. Do NOT include any explanations, notes, or meta-commentary
-3. Do NOT translate placeholder variables like {{forbidden_prompt}} or {{response}}
-4. Preserve ALL formatting exactly as shown"""
+### Guidelines:
+- Translate the text accurately while preserving its professional and technical nature
+- Preserve ALL special formatting:
+  * Placeholder variables: {{forbidden_prompt}}, {{response}}
+  * Special markers: #scores, #overall_reasoning, etc.
+  * Line breaks and paragraph structure
+  * Numbered lists (1., 2., 3.)
+  * Bullet points (-)
+- Do NOT translate placeholder variables in curly braces {{}}
+- Do NOT translate special markers starting with #
+- Maintain the formal, instructional tone
 
-        # Simplified user prompt with clear example
-        translation_prompt = f"""Translate this text to {target_language_name}:
+### Output Format:
+Translation:
+<your translated text ONLY, without any explanation>
 
-{text}
-
-Remember:
-- Keep {{forbidden_prompt}} and {{response}} unchanged
-- Keep #scores, #overall_reasoning unchanged
-- Output ONLY the translation"""
+Now, translate the following text:
+English: "{text}"
+"""
 
         messages = [
-            {"role": "system", "content": system_prompt},
             {"role": "user", "content": translation_prompt}
         ]
 
         response = await self.api.acall_model(
             messages=messages,
-            temperature=0.1,  # Lower temperature for more consistent output
+            temperature=0.1,
             max_tokens=4000
         )
 
         if response:
-            # Post-processing: remove common artifacts
+            # Post-processing: extract only the translation part
             cleaned = response.strip()
 
-            # Remove common unwanted patterns
+            # Extract text after "Translation:" marker
+            if "Translation:" in cleaned:
+                parts = cleaned.split("Translation:", 1)
+                if len(parts) > 1:
+                    cleaned = parts[1].strip()
+
+            # Remove common unwanted patterns at the start
             unwanted_patterns = [
                 "Here is the translation:",
-                "Translation:",
                 "Translated text:",
                 "以下是翻译:",
                 "翻译:",
