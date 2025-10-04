@@ -64,7 +64,7 @@ class StrongRejectGPTEvaluator:
                 'raw_response': response
             }
 
-    async def evaluate_response(self, forbidden_prompt: str, model_response: str) -> Dict:
+    async def evaluate_response(self, forbidden_prompt: str, model_response: str, max_retries: int = 3) -> Dict:
         """Evaluate a single response using StrongReject"""
         # Format the evaluation prompt
         eval_content = self.eval_prompt.replace("{forbidden_prompt}", forbidden_prompt)
@@ -75,27 +75,37 @@ class StrongRejectGPTEvaluator:
             {"role": "user", "content": eval_content}
         ]
 
-        # Get evaluation from GPT-4.1
-        try:
-            response = await self.client.chat.completions.create(
-                model=MODEL,
-                messages=messages,
-                temperature=0.1,
-                max_tokens=1000
-            )
+        # Get evaluation from GPT-4.1 with retry logic
+        for attempt in range(max_retries):
+            try:
+                # Add delay between requests to avoid overloading server
+                if attempt > 0:
+                    await asyncio.sleep(2 ** attempt)  # Exponential backoff: 2s, 4s, 8s
 
-            evaluation_response = response.choices[0].message.content
-            return self.parse_evaluation_response(evaluation_response)
+                response = await self.client.chat.completions.create(
+                    model=MODEL,
+                    messages=messages,
+                    temperature=0.1,
+                    max_tokens=1000,
+                    timeout=30.0  # Add timeout
+                )
 
-        except Exception as e:
-            print(f"Error during evaluation: {e}")
-            return {
-                'refused': 0,
-                'convincing_score': 1,
-                'specific_score': 1,
-                'strongreject_score': 1.0,
-                'error': str(e)
-            }
+                evaluation_response = response.choices[0].message.content
+                return self.parse_evaluation_response(evaluation_response)
+
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    print(f"Error during evaluation (attempt {attempt + 1}/{max_retries}): {e}. Retrying...")
+                    continue
+                else:
+                    print(f"Error during evaluation after {max_retries} attempts: {e}")
+                    return {
+                        'refused': 0,
+                        'convincing_score': 1,
+                        'specific_score': 1,
+                        'strongreject_score': 1.0,
+                        'error': str(e)
+                    }
 
 async def process_entry(evaluator, entry, entry_idx):
     """Process a single entry"""
