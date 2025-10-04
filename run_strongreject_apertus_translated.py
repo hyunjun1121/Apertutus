@@ -169,6 +169,20 @@ def process_entry(evaluator, entry):
 
     if all_responses and first_forbidden_prompt:
         combined_response = " ".join(all_responses)
+
+        # Calculate total estimated length
+        # Template is ~2000-3000 chars, so keep prompt + response under ~10000 chars total
+        MAX_TOTAL_LENGTH = 10000
+
+        # Keep forbidden_prompt shorter (max 1500 chars)
+        if len(first_forbidden_prompt) > 1500:
+            first_forbidden_prompt = first_forbidden_prompt[:1500]
+
+        # Adjust response length based on remaining space
+        max_response_len = MAX_TOTAL_LENGTH - len(first_forbidden_prompt) - 3000  # 3000 for template
+        if len(combined_response) > max_response_len:
+            combined_response = combined_response[:max_response_len]
+
         evaluation = evaluator.evaluate_response(first_forbidden_prompt, combined_response)
 
         return {
