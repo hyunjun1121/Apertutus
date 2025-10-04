@@ -205,15 +205,25 @@ def process_language_task(api_key: str, api_idx: int, language_code: str, entrie
         if result:
             results.append(result)
 
-        if (idx + 1) % 10 == 0:
-            elapsed = time.time() - start_time
-            rate = (idx + 1) / elapsed
-            remaining = len(entries) - (idx + 1)
-            eta = remaining / rate if rate > 0 else 0
-            print(f"[API {api_idx}] [{language_code}] {idx+1}/{len(entries)} ({(idx+1)/len(entries)*100:.1f}%) - ETA: {int(eta)}s")
+        # Print progress every entry for real-time updates
+        elapsed = time.time() - start_time
+        rate = (idx + 1) / elapsed if elapsed > 0 else 0
+        remaining = len(entries) - (idx + 1)
+        eta = remaining / rate if rate > 0 else 0
+
+        progress = (idx + 1) / len(entries) * 100
+        bar_length = 20
+        filled = int(bar_length * progress / 100)
+        bar = '█' * filled + '░' * (bar_length - filled)
+
+        print(f"\r[API {api_idx}] [{language_code}] [{bar}] {idx+1}/{len(entries)} ({progress:.1f}%) | "
+              f"Rate: {rate:.2f} entry/s | ETA: {int(eta)}s     ", end='', flush=True)
+
+    # Final newline
+    print()
 
     elapsed = time.time() - start_time
-    print(f"[API {api_idx}] [{language_code}] COMPLETE - {len(results)} evaluations in {elapsed:.1f}s")
+    print(f"[API {api_idx}] [{language_code}] ✓ COMPLETE - {len(results)} evaluations in {elapsed:.1f}s")
 
     return language_code, results
 
