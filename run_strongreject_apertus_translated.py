@@ -14,11 +14,16 @@ import re
 from typing import Dict, List, Tuple
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import sys
 
 # Rate limit per API key
 REQUESTS_PER_SECOND = 5
 TOKENS_PER_MINUTE = 100000
 MIN_REQUEST_INTERVAL = 1.0 / REQUESTS_PER_SECOND  # 0.2 seconds
+
+# Global progress tracker
+progress_lock = threading.Lock()
+progress_data = {}
 
 class RateLimiter:
     """Rate limiter for a single API key"""
@@ -192,10 +197,51 @@ def process_entry(evaluator, entry):
 
     return None
 
+def update_progress_display():
+    """Display all API progress in a clean format"""
+    with progress_lock:
+        # Clear screen and move to top
+        sys.stdout.write('\033[2J\033[H')
+
+        print("=" * 80)
+        print("APERTUS-70B STRONGREJECT EVALUATION - PARALLEL PROCESSING")
+        print("=" * 80)
+        print()
+
+        for api_idx in sorted(progress_data.keys()):
+            data = progress_data[api_idx]
+            lang = data['language']
+            current = data['current']
+            total = data['total']
+            rate = data['rate']
+            eta = data['eta']
+
+            progress = (current / total * 100) if total > 0 else 0
+            bar_length = 30
+            filled = int(bar_length * progress / 100)
+            bar = '█' * filled + '░' * (bar_length - filled)
+
+            status = "DONE ✓" if current >= total else f"ETA: {int(eta):4d}s"
+
+            print(f"[API {api_idx}] {lang:12s} [{bar}] {current:3d}/{total} ({progress:5.1f}%) | "
+                  f"{rate:.2f} e/s | {status}")
+
+        print()
+        sys.stdout.flush()
+
 def process_language_task(api_key: str, api_idx: int, language_code: str, entries: List, rate_limiter: RateLimiter) -> Tuple[str, List]:
     """Process entries for a specific language with a specific API key"""
-    print(f"[API {api_idx}] [{language_code}] Starting {len(entries)} entries...")
     start_time = time.time()
+
+    # Initialize progress
+    with progress_lock:
+        progress_data[api_idx] = {
+            'language': language_code,
+            'current': 0,
+            'total': len(entries),
+            'rate': 0.0,
+            'eta': 0
+        }
 
     evaluator = StrongRejectApertusTranslatedEvaluator(api_key, language_code, rate_limiter)
     results = []
@@ -205,26 +251,26 @@ def process_language_task(api_key: str, api_idx: int, language_code: str, entrie
         if result:
             results.append(result)
 
-        # Print progress every entry for real-time updates
+        # Update progress
         elapsed = time.time() - start_time
         rate = (idx + 1) / elapsed if elapsed > 0 else 0
         remaining = len(entries) - (idx + 1)
         eta = remaining / rate if rate > 0 else 0
 
-        progress = (idx + 1) / len(entries) * 100
-        bar_length = 20
-        filled = int(bar_length * progress / 100)
-        bar = '█' * filled + '░' * (bar_length - filled)
+        with progress_lock:
+            progress_data[api_idx] = {
+                'language': language_code,
+                'current': idx + 1,
+                'total': len(entries),
+                'rate': rate,
+                'eta': eta
+            }
 
-        print(f"\r[API {api_idx}] [{language_code}] [{bar}] {idx+1}/{len(entries)} ({progress:.1f}%) | "
-              f"Rate: {rate:.2f} entry/s | ETA: {int(eta)}s     ", end='', flush=True)
-
-    # Final newline
-    print()
+        # Update display every 5 entries
+        if (idx + 1) % 5 == 0 or (idx + 1) == len(entries):
+            update_progress_display()
 
     elapsed = time.time() - start_time
-    print(f"[API {api_idx}] [{language_code}] ✓ COMPLETE - {len(results)} evaluations in {elapsed:.1f}s")
-
     return language_code, results
 
 def main():
