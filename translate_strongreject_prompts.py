@@ -1,0 +1,246 @@
+import json
+import asyncio
+from pathlib import Path
+from apertus_api import ApertusAPI
+
+# Language mapping
+LANGUAGES = {
+    'arb.Arab': {'name': 'Arabic', 'script': 'Arab'},
+    'ces.Latn': {'name': 'Czech', 'script': 'Latn'},
+    'cmn.Hani': {'name': 'Chinese (Mandarin)', 'script': 'Hani'},
+    'deu.Latn': {'name': 'German', 'script': 'Latn'},
+    'fra.Latn': {'name': 'French', 'script': 'Latn'},
+    'ind.Latn': {'name': 'Indonesian', 'script': 'Latn'},
+    'ita.Latn': {'name': 'Italian', 'script': 'Latn'},
+    'jpn.Jpan': {'name': 'Japanese', 'script': 'Jpan'},
+    'kor.Hang': {'name': 'Korean', 'script': 'Hang'},
+    'nld.Latn': {'name': 'Dutch', 'script': 'Latn'},
+    'pol.Latn': {'name': 'Polish', 'script': 'Latn'},
+    'por.Latn': {'name': 'Portuguese', 'script': 'Latn'},
+    'ron.Latn': {'name': 'Romanian', 'script': 'Latn'},
+    'rus.Cyrl': {'name': 'Russian', 'script': 'Cyrl'},
+    'spa.Latn': {'name': 'Spanish', 'script': 'Latn'},
+    'tur.Latn': {'name': 'Turkish', 'script': 'Latn'}
+}
+
+class StrongRejectTranslator:
+    def __init__(self):
+        # Hardcoded API key
+        api_keys = ["FVNVGZmSngy18jUzod50WdcIIUBq"]
+        self.api = ApertusAPI(api_keys)
+
+    def load_original_prompts(self):
+        """Load original English prompts"""
+        with open('strong_reject.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return data
+
+    async def translate_text(self, text, target_language_name):
+        """Translate text to target language using Apertus API"""
+
+        # Use a clear system prompt to set expectations
+        system_prompt = f"""You are a professional translator. Your task is to translate English text to {target_language_name}.
+
+CRITICAL RULES:
+1. Output ONLY the translated text
+2. Do NOT include any explanations, notes, or meta-commentary
+3. Do NOT translate placeholder variables like {{forbidden_prompt}} or {{response}}
+4. Preserve ALL formatting exactly as shown"""
+
+        # Simplified user prompt with clear example
+        translation_prompt = f"""Translate this text to {target_language_name}:
+
+{text}
+
+Remember:
+- Keep {{forbidden_prompt}} and {{response}} unchanged
+- Keep #scores, #overall_reasoning unchanged
+- Output ONLY the translation"""
+
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": translation_prompt}
+        ]
+
+        response = await self.api.acall_model(
+            messages=messages,
+            temperature=0.1,  # Lower temperature for more consistent output
+            max_tokens=4000
+        )
+
+        if response:
+            # Post-processing: remove common artifacts
+            cleaned = response.strip()
+
+            # Remove common unwanted patterns
+            unwanted_patterns = [
+                "Here is the translation:",
+                "Translation:",
+                "Translated text:",
+                "以下是翻译:",
+                "翻译:",
+                "번역:",
+                "다음은 번역입니다:",
+                "Übersetzung:",
+                "Traduction:",
+                "Traduzione:",
+                "Traducción:",
+                "Tradução:",
+                "Перевод:"
+            ]
+
+            for pattern in unwanted_patterns:
+                if cleaned.startswith(pattern):
+                    cleaned = cleaned[len(pattern):].strip()
+
+            return cleaned
+
+        return None
+
+    async def translate_all_languages(self):
+        """Translate prompts to all 16 languages"""
+        # Load original prompts
+        original_data = self.load_original_prompts()
+
+        # Start with original English version
+        result = {
+            'eng.Latn': {
+                'strongreject_prompt': original_data['strongreject_prompt'],
+                'strongreject_system': original_data['strongreject_system']
+            }
+        }
+
+        print("=" * 80)
+        print("TRANSLATING STRONGREJECT PROMPTS TO 16 LANGUAGES")
+        print("=" * 80)
+
+        for lang_code, lang_info in LANGUAGES.items():
+            lang_name = lang_info['name']
+            print(f"\nTranslating to {lang_name} ({lang_code})...")
+
+            try:
+                # Translate strongreject_prompt
+                print(f"  - Translating strongreject_prompt...")
+                translated_prompt = await self.translate_text(
+                    original_data['strongreject_prompt'],
+                    lang_name
+                )
+
+                # Translate strongreject_system
+                print(f"  - Translating strongreject_system...")
+                translated_system = await self.translate_text(
+                    original_data['strongreject_system'],
+                    lang_name
+                )
+
+                if translated_prompt and translated_system:
+                    result[lang_code] = {
+                        'strongreject_prompt': translated_prompt,
+                        'strongreject_system': translated_system
+                    }
+                    print(f"  [SUCCESS] {lang_name} translation completed")
+                else:
+                    print(f"  [FAILED] {lang_name} translation failed")
+
+            except Exception as e:
+                print(f"  [ERROR] Failed to translate {lang_name}: {e}")
+
+        return result
+
+    def validate_translation(self, original_text, translated_text, lang_name):
+        """Validate translation quality"""
+        issues = []
+
+        # Check placeholders are preserved
+        if '{forbidden_prompt}' in original_text and '{forbidden_prompt}' not in translated_text:
+            issues.append("Missing {forbidden_prompt}")
+        if '{response}' in original_text and '{response}' not in translated_text:
+            issues.append("Missing {response}")
+
+        # Check if translation is suspiciously long (>3x original)
+        if len(translated_text) > len(original_text) * 3:
+            issues.append(f"Translation too long ({len(translated_text)} vs {len(original_text)} chars)")
+
+        # Check for unwanted phrases that might indicate meta-commentary
+        unwanted_phrases = ['translate', 'translation', '翻译', '번역', 'Übersetzung',
+                           'Traduction', 'Traduzione', 'Traducción', 'Tradução', 'Перевод']
+        for phrase in unwanted_phrases:
+            if phrase.lower() in translated_text.lower():
+                issues.append(f"Contains unwanted phrase: {phrase}")
+
+        return issues
+
+    def save_translations(self, translations):
+        """Save translations to strong_reject.json with backup"""
+        output_file = 'strong_reject.json'
+        backup_file = 'strong_reject_backup.json'
+
+        # Create backup of existing file
+        if Path(output_file).exists():
+            import shutil
+            shutil.copy(output_file, backup_file)
+            print(f"Backup created: {backup_file}")
+
+        # Validate all translations before saving
+        print("\n" + "=" * 80)
+        print("VALIDATION RESULTS")
+        print("=" * 80)
+
+        all_valid = True
+        for lang_code, content in translations.items():
+            if lang_code == 'eng.Latn':
+                continue
+
+            # Get original for comparison
+            original = translations['eng.Latn']
+
+            # Validate system prompt
+            issues_system = self.validate_translation(
+                original['strongreject_system'],
+                content['strongreject_system'],
+                lang_code
+            )
+
+            # Validate main prompt
+            issues_prompt = self.validate_translation(
+                original['strongreject_prompt'],
+                content['strongreject_prompt'],
+                lang_code
+            )
+
+            all_issues = issues_system + issues_prompt
+
+            if all_issues:
+                all_valid = False
+                print(f"\n{lang_code}:")
+                for issue in all_issues:
+                    print(f"  [WARNING] {issue}")
+            else:
+                print(f"{lang_code}: OK")
+
+        # Save to file
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(translations, f, indent=2, ensure_ascii=False)
+
+        print("\n" + "=" * 80)
+        print(f"Translations saved to {output_file}")
+        print(f"Total languages: {len(translations)}")
+        if all_valid:
+            print("Status: All validations passed!")
+        else:
+            print("Status: Some warnings detected (review above)")
+        print("=" * 80)
+
+async def main():
+    translator = StrongRejectTranslator()
+
+    # Translate to all languages
+    translations = await translator.translate_all_languages()
+
+    # Save to file
+    translator.save_translations(translations)
+
+    print("\n[DONE] All translations completed!")
+
+if __name__ == "__main__":
+    asyncio.run(main())
