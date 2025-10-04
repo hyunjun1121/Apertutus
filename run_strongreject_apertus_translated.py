@@ -43,16 +43,16 @@ class RateLimiter:
                 self.tokens_used_in_window = 0
                 self.window_start_time = current_time
 
-            # Check if we would exceed token limit
-            if self.tokens_used_in_window + estimated_tokens > TOKENS_PER_MINUTE:
-                sleep_time = 60 - (current_time - self.window_start_time)
-                if sleep_time > 0:
-                    print(f"  [Rate Limit] Token limit reached, sleeping {sleep_time:.1f}s")
-                    time.sleep(sleep_time)
-                    self.tokens_used_in_window = 0
-                    self.window_start_time = time.time()
+            # Check if we would exceed token limit (DISABLED - too conservative)
+            # if self.tokens_used_in_window + estimated_tokens > TOKENS_PER_MINUTE:
+            #     sleep_time = 60 - (current_time - self.window_start_time)
+            #     if sleep_time > 0:
+            #         print(f"  [Rate Limit] Token limit reached, sleeping {sleep_time:.1f}s")
+            #         time.sleep(sleep_time)
+            #         self.tokens_used_in_window = 0
+            #         self.window_start_time = time.time()
 
-            # Check request rate limit
+            # Check request rate limit (5 req/sec)
             time_since_last = current_time - self.last_request_time
             if time_since_last < MIN_REQUEST_INTERVAL:
                 time.sleep(MIN_REQUEST_INTERVAL - time_since_last)
