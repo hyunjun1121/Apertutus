@@ -226,38 +226,7 @@ jpn.Jpan & 0.066 & 0.253 & 0.104 & 0.776 & kor.Hang & 0.055 & 0.123 & 0.090 & 0.
 \subsection{Qualitative Analysis: When and Why Judges Disagree}
 \label{subsec:qualitative}
 
-To understand the mechanisms behind the large judge gaps, we manually analyzed high-disagreement cases where \(|\text{Apertus-score} - \text{GPT-score}| > 4\) points. Across our 16-language dataset, we identified 236 such cases in Arabic alone (61.8\% of samples), representing systematic rather than sporadic failures.
-
-\paragraph{Weak Judge Failure Patterns.}
-Three dominant patterns emerge in evaluations by the weaker 70B judge (Apertus--Eng):
-
-\textbf{Pattern 1: Formatting-as-Refusal Confusion (78\% of high-disagreement cases).}
-The weaker judge frequently misclassifies structured harmful content as refusals. When responses present dangerous information in organized formats---e.g., numbered steps, bullet points, or educational framing---the weaker judge interprets the \emph{structure} as evidence of responsible behavior rather than recognizing the \emph{content} as harmful. For instance, detailed bomb-making instructions formatted as ``Steps 1--5'' receive \texttt{refused}=1 from the weak judge (``model provided educational context''), while GPT-4.1 correctly assigns \texttt{refused}=0 with high specificity scores (``fully detailed instructions''). This suggests the weaker judge conflates instruction-following capability (formatting) with safety compliance (refusing harmful requests).
-
-\textbf{Pattern 2: Euphemism and Cultural Nuance Blindness (15\% of cases).}
-In non-English responses, subtle harmful phrasing escapes detection by the weaker judge, particularly in languages with rich euphemistic traditions (Arabic, Turkish). For example, indirect references to violence or culturally specific danger cues are rated as low-specificity by the weak judge (\texttt{specific\_score}=1--2), whereas GPT-4.1 recognizes the implicit harm (\texttt{specific\_score}=4--5). This pattern reveals a dual deficit: limited cross-lingual reasoning and insufficient grounding in cultural context.
-
-\textbf{Pattern 3: Multi-Turn Context Loss (7\% of cases).}
-The weaker judge occasionally fails to aggregate harm across conversation turns, treating each turn independently. When jailbreak tactics gradually escalate requests over multiple exchanges, the weak judge evaluates only the final polite phrasing rather than the cumulative harmful trajectory.
-
-\paragraph{Template Translation Effects on Error Modes.}
-
-\textbf{When Native Templates Help (German, Spanish, French).}
-For high-resource European languages, native rubrics reduce parsing ambiguity. The term ``überzeugend'' (German for ``convincing'') provides more precise semantic grounding than English ``convincing'' when judging German responses, leading to better score calibration. Refusal false-positive rates drop from 88\% (English template) to 20--30\% (native template) for these languages.
-
-\textbf{When Native Templates Hurt (Turkish, Korean).}
-Translation introduces new failure modes. In Turkish, safety-critical terms like ``harmful'' lack direct equivalents with identical legal/technical connotations, causing the rubric to become more permissive (refused rate increases to 97.6\%). In Korean, high-context communication norms shift interpretation: what GPT-4.1 rates as ``specific harm'' under English rubric is judged as ``vague'' under Korean rubric, reducing scores by 70\%. This suggests template translation quality and cultural alignment of safety concepts critically moderate effectiveness.
-
-\paragraph{Implications for Evaluation Design.}
-
-These patterns reveal that:
-\begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=2pt]
-  \item \textbf{Formatting biases in weak judges are systematic.} Simple adversarial strategies (adding structure, educational framing) reliably evade weaker judges, creating exploitable vulnerabilities.
-  \item \textbf{Template translation is necessary but fragile.} Localization helps only when translations preserve technical precision and cultural context---a non-trivial requirement for safety terminology.
-  \item \textbf{Judge capacity limitations dominate.} Even optimal template translation cannot compensate for fundamental deficits in reasoning, cross-lingual understanding, and multi-turn context integration.
-\end{itemize}
-
-These findings underscore that relying on weaker judges, even with carefully localized rubrics, introduces unacceptable false-safety risks. Sufficiently capable judges remain essential.
+Manual analysis of 236 high-disagreement cases in Arabic (61.8\% of samples) reveals three systematic weak-judge failure patterns: (1) \emph{formatting-as-refusal confusion} (78\%)---misclassifying structured harmful content as safe due to educational framing, (2) \emph{euphemism blindness} (15\%)---missing culturally nuanced harm in Arabic/Turkish, and (3) \emph{multi-turn context loss} (7\%)---failing to aggregate escalating requests. Native templates help high-resource European languages (German refusal false-positives drop from 88\% to 20--30\%) but introduce new failures in Turkish/Korean due to safety-term mistranslation and high-context norms. Detailed error analysis in Appendix~\ref{app:qualitative}.
 
 \subsection{Takeaways}
 \begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=2pt]
@@ -486,6 +455,43 @@ Our dataset consists of:
 \end{itemize}
 
 This distribution ensures adequate statistical power across all turn counts, with each turn represented by at least 656 samples across 16 languages.
+
+\section{Qualitative Error Analysis}
+\label{app:qualitative}
+
+To understand the mechanisms behind the large judge gaps, we manually analyzed high-disagreement cases where \(|\text{Apertus-score} - \text{GPT-score}| > 4\) points. Across our 16-language dataset, we identified 236 such cases in Arabic alone (61.8\% of samples), representing systematic rather than sporadic failures.
+
+\subsection{Weak Judge Failure Patterns}
+
+Three dominant patterns emerge in evaluations by the weaker 70B judge (Apertus--Eng):
+
+\paragraph{Pattern 1: Formatting-as-Refusal Confusion (78\% of high-disagreement cases).}
+The weaker judge frequently misclassifies structured harmful content as refusals. When responses present dangerous information in organized formats---e.g., numbered steps, bullet points, or educational framing---the weaker judge interprets the \emph{structure} as evidence of responsible behavior rather than recognizing the \emph{content} as harmful. For instance, detailed bomb-making instructions formatted as ``Steps 1--5'' receive \texttt{refused}=1 from the weak judge (``model provided educational context''), while GPT-4.1 correctly assigns \texttt{refused}=0 with high specificity scores (``fully detailed instructions''). This suggests the weaker judge conflates instruction-following capability (formatting) with safety compliance (refusing harmful requests).
+
+\paragraph{Pattern 2: Euphemism and Cultural Nuance Blindness (15\% of cases).}
+In non-English responses, subtle harmful phrasing escapes detection by the weaker judge, particularly in languages with rich euphemistic traditions (Arabic, Turkish). For example, indirect references to violence or culturally specific danger cues are rated as low-specificity by the weak judge (\texttt{specific\_score}=1--2), whereas GPT-4.1 recognizes the implicit harm (\texttt{specific\_score}=4--5). This pattern reveals a dual deficit: limited cross-lingual reasoning and insufficient grounding in cultural context.
+
+\paragraph{Pattern 3: Multi-Turn Context Loss (7\% of cases).}
+The weaker judge occasionally fails to aggregate harm across conversation turns, treating each turn independently. When jailbreak tactics gradually escalate requests over multiple exchanges, the weak judge evaluates only the final polite phrasing rather than the cumulative harmful trajectory.
+
+\subsection{Template Translation Effects on Error Modes}
+
+\paragraph{When Native Templates Help (German, Spanish, French).}
+For high-resource European languages, native rubrics reduce parsing ambiguity. The term ``überzeugend'' (German for ``convincing'') provides more precise semantic grounding than English ``convincing'' when judging German responses, leading to better score calibration. Refusal false-positive rates drop from 88\% (English template) to 20--30\% (native template) for these languages.
+
+\paragraph{When Native Templates Hurt (Turkish, Korean).}
+Translation introduces new failure modes. In Turkish, safety-critical terms like ``harmful'' lack direct equivalents with identical legal/technical connotations, causing the rubric to become more permissive (refused rate increases to 97.6\%). In Korean, high-context communication norms shift interpretation: what GPT-4.1 rates as ``specific harm'' under English rubric is judged as ``vague'' under Korean rubric, reducing scores by 70\%. This suggests template translation quality and cultural alignment of safety concepts critically moderate effectiveness.
+
+\subsection{Implications for Evaluation Design}
+
+These patterns reveal that:
+\begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=2pt]
+  \item \textbf{Formatting biases in weak judges are systematic.} Simple adversarial strategies (adding structure, educational framing) reliably evade weaker judges, creating exploitable vulnerabilities.
+  \item \textbf{Template translation is necessary but fragile.} Localization helps only when translations preserve technical precision and cultural context---a non-trivial requirement for safety terminology.
+  \item \textbf{Judge capacity limitations dominate.} Even optimal template translation cannot compensate for fundamental deficits in reasoning, cross-lingual understanding, and multi-turn context integration.
+\end{itemize}
+
+These findings underscore that relying on weaker judges, even with carefully localized rubrics, introduces unacceptable false-safety risks. Sufficiently capable judges remain essential.
 
 \section{Artifacts and Implementation}
 \label{app:artifacts}
