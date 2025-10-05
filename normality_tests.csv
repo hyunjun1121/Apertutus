@@ -1,0 +1,5 @@
+condition,shapiro_statistic,shapiro_p_value,is_normal,interpretation
+Apertus-Eng,0.9597311199048191,0.6569124623353465,True,Normal
+Apertus-Trans,0.9570801266805213,0.6092703551791476,True,Normal
+GPT-Eng,0.9632578285131698,0.7210943776169676,True,Normal
+GPT-Trans,0.6811761872948772,0.00010546472380561948,False,Non-normal (consider non-parametric tests)

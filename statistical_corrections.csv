@@ -1,0 +1,5 @@
+comparison,test_type,t_statistic,p_value,cohens_d,effect_size_interpretation,p_bonferroni,p_fdr,significant_bonferroni,significant_fdr,eta_squared
+Apertus: Eng vs Trans,paired t-test,2.8698407682618745,0.011687592302351262,0.7174601920654685,medium,0.04675036920940505,0.011687592302351262,True,True,
+GPT: Eng vs Trans,paired t-test,3.2530754941954534,0.005349487119298187,0.8132688735488633,large,0.021397948477192747,0.007132649492397582,True,True,
+English template: Apertus vs GPT,independent t-test,-136.20685158474288,1.907280004752344e-43,,large,7.629120019009376e-43,7.629120019009376e-43,True,True,0.9983855610103421
+Native template: Apertus vs GPT,independent t-test,-6.21664898665044,7.621492031801682e-07,,large,3.0485968127206728e-06,1.5242984063603364e-06,True,True,0.5629798775592048

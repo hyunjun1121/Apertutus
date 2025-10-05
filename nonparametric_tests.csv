@@ -1,0 +1,5 @@
+comparison,test,statistic,p_value
+Apertus: Eng vs Trans,Wilcoxon signed-rank,22.0,0.0155029296875
+GPT: Eng vs Trans,Wilcoxon signed-rank,1.0,6.103515625e-05
+English template: Apertus vs GPT,Mann-Whitney U,0.0,1.541512705218063e-06
+Native template: Apertus vs GPT,Mann-Whitney U,9.0,7.964469616702407e-06

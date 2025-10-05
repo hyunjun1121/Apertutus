@@ -1,0 +1,3 @@
+analysis,effect_size,sample_size,alpha,power,power_interpretation
+Apertus: Eng vs Trans,0.7174601920654685,16,0.05,0.7649934978472248,inadequate
+GPT: Eng vs Trans,0.8132688735488633,16,0.05,0.8597177733445653,adequate

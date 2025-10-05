@@ -1,0 +1,3 @@
+analysis,test,t_statistic,p_value,Latin_mean,NonLatin_mean,difference,interpretation
+Apertus template effect: Latin vs Non-Latin,Independent t-test,1.2326014821250875,0.2380232678920851,-1.6728938600666348,-3.803403141361256,2.1305092812946214,Latin scripts benefit more
+GPT template effect: Latin vs Non-Latin,Independent t-test,3.5847957898749505,0.0029872682543315683,-0.3484055211803904,-1.7405759162303667,1.3921703950499762,Latin scripts benefit more

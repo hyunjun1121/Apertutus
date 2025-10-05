@@ -1,0 +1,3 @@
+analysis,test,F_statistic,p_value,significant,interpretation
+Apertus template effect by language family,One-way ANOVA,1.0070978912374189,0.44472442116121,False,No significant family difference
+GPT template effect by language family,One-way ANOVA,64.22548344861598,1.4837097801162576e-07,True,Template effect differs across families
