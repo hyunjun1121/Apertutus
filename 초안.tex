@@ -288,6 +288,12 @@ Our 16-language set spans multiple families and scripts but does not cover code-
 \paragraph{Ground truth and human oversight.}
 We rely on LLM-as-a-Judge rather than large-scale human annotation for harmfulness labels. Although frontier judges are strong, they remain imperfect and introduce their own biases. \emph{Future work:} incorporate multilingual expert adjudication, calibrate judges to human panels, and publish \emph{judge--human gap} estimates per language.
 
+\paragraph{Computational requirements and reproducibility.}
+Our evaluation pipeline requires extensive API access to proprietary models (GPT-4.1, Claude Opus 4.1), incurring substantial costs (estimated at thousands of USD for 24,448 evaluations across translation, response generation, and judging) and introducing reproducibility barriers as these models evolve or become deprecated. The reliance on closed APIs prevents full reproducibility and limits accessibility for researchers without institutional API budgets.
+
+\paragraph{Limited language coverage and typological diversity.}
+While we cover 16 languages across 6 scripts, this represents <1\% of Apertus-70B's 1800+ language coverage and excludes critical linguistic phenomena: polysynthetic languages (e.g., Inuktitut), tonal languages beyond Mandarin, ergative-absolutive alignment (e.g., Basque), and agglutinative morphology (though Turkish is included, deeper analysis is needed). Our findings may not generalize to languages with fundamentally different information structures or safety concept lexicalization patterns.
+
 \paragraph{Judge model access.}
 We rely on proprietary GPT-4.1 as the "ground truth" judge, which may introduce vendor-specific biases and limits reproducibility as the model evolves. \emph{Future work:} establish human-annotated gold standards for multilingual safety to enable independent validation.
 
