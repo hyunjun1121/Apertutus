@@ -1,0 +1,1 @@
+./launch_safety_optimized.sh: line 97: python: command not found

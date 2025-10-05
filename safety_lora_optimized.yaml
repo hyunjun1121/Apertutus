@@ -1,0 +1,51 @@
+# Model - Using smaller model with quantization
+model_name_or_path: swiss-ai/Apertus-8B-Instruct-2509
+torch_dtype: float16  # Use float16 instead of bfloat16
+attn_implementation: eager
+load_in_8bit: true  # 8-bit quantization to reduce memory
+
+# Dataset
+dataset_name: HuggingFaceH4/Multilingual-Thinking
+dataset_num_proc: 4
+dataset_text_field: messages  # Specify text field
+
+# Training hyperparameters - HEAVILY OPTIMIZED FOR MEMORY
+learning_rate: 2.0e-4
+gradient_checkpointing: true  # Essential for memory savings
+gradient_checkpointing_kwargs:
+  use_reentrant: false
+num_train_epochs: 1
+logging_steps: 50
+per_device_train_batch_size: 1  # Minimum batch size
+gradient_accumulation_steps: 16  # Effective batch = 16
+max_grad_norm: 0.3
+
+# LoRA Configuration - Reduced for memory
+use_peft: true
+lora_r: 4  # Reduced rank
+lora_alpha: 8
+lora_dropout: 0.1
+lora_target_modules: ["q_proj", "v_proj"]  # Only target specific modules
+
+# Sequence length - Reduced
+max_length: 256  # Reduced from 512
+packing: false
+
+# Memory optimizations
+optim: adamw_torch_fused  # More memory efficient
+fp16: true
+tf32: false
+
+# Learning rate scheduler
+warmup_ratio: 0.1
+lr_scheduler_type: cosine
+
+# Output & logging
+output_dir: ./safety_lora_optimized_20250926_215543
+report_to: "none"
+seed: 42
+save_strategy: steps
+save_steps: 500
+save_total_limit: 1
+dataloader_num_workers: 0  # Reduce memory overhead
+remove_unused_columns: true
