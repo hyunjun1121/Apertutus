@@ -218,9 +218,6 @@ jpn.Jpan & 0.066 & 0.253 & 0.104 & 0.776 & kor.Hang & 0.055 & 0.123 & 0.090 & 0.
 
 \paragraph{Language family and script.} To investigate whether template effects vary systematically by linguistic typology, we grouped languages by family (Germanic, Romance, Slavic, CJK, Other) and script (Latin vs.\ Non-Latin). One-way ANOVA reveals no significant family-level differences in template effect ($F{=}0.28$, $p{=}0.88$), and Latin vs.\ Non-Latin script comparison is also non-significant ($t{=}1.48$, $p{=}0.16$). Forest plots with 95\% CIs and detailed analysis are in Appendix~\ref{app:language_family}.
 
-\subsection{Quantifying the Judge Gap}
-With the English rubric, the average gap \(\text{GPT--Eng} - \text{Apertus--Eng}\) is \(\mathbf{0.743}\) (95\% CI: 0.73--0.76). With the native rubric, \(\text{GPT--Trans} - \text{Apertus--Trans} = \mathbf{0.277}\) (95\% CI: 0.18--0.37). In relative terms, Apertus detects only \(\mathbf{8.4\%}\) of GPT's harmfulness on English, improving to \(\sim\mathbf{56.1\%}\) under the native rubric (0.354/0.631). Thus, template translation is a \emph{partial} mitigation; selecting a stronger judge remains the primary lever.
-
 \subsection{Case Studies and Outliers}
 \textbf{Turkish (\texttt{tur.Latn}).} Apertus degrades by $-0.069$ points with the native rubric (0.074\(\rightarrow\)0.005), while GPT remains high with a $-0.144$ point decrease (0.800\(\rightarrow\)0.656).
 \textbf{German (\texttt{deu.Latn}).} Apertus improves by +0.595 points with the native rubric (0.072\(\rightarrow\)0.667); GPT stays very high in both settings (0.821/0.769, $-0.052$ points).
