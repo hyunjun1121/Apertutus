@@ -3,7 +3,7 @@
 \begin{abstract}
 Ensuring LLM safety across languages requires reliable multilingual evaluation, yet current practices remain poorly understood. We systematically investigate two critical factors: \emph{who} judges model responses (weak vs.\ strong judge) and \emph{in what language} the evaluation rubric is expressed (English vs.\ native). We localize 382 multi-turn jailbreaks into 16 languages, generate responses with Apertus-70B, and evaluate them under four judge-template conditions (24,448 assessments). We uncover a severe \textbf{judge capacity gap}: a weaker judge (Apertus-70B) assigns a mean harmfulness score of 0.068, while a stronger judge (GPT-4.1) scores the same responses at 0.811---a 0.743-point gap. Native-language rubrics improve the weak judge by +0.286 points but only partially close the gap. Critically, \textbf{judge capacity dominates template language}: even with native rubrics, the weak judge detects only 56\% of the harmfulness identified by the strong judge. Our findings demonstrate that (i) weaker judges are fundamentally unreliable for multilingual safety evaluation, (ii) template translation partially mitigates but cannot substitute for judge capacity, and (iii) multilingual safety pipelines require both capable judges and per-language validation. Code and data: \url{\githuburl}
 \end{abstract}
-  
+
 \section{Introduction}
 
 Large language models (LLMs) have made impressive strides, but ensuring their safety across different languages remains a critical challenge. Existing safety alignment efforts have been predominantly English-centric, even as LLMs are deployed globally~\cite{wang2024xsafety,deng2024multilingualjailbreak}. Recent studies show that non-English attacks bypass safety guardrails at significantly higher rates, with attack success rates 2--4$\times$ higher than English~\cite{deng2024multilingualjailbreak}. This \textit{multilingual jailbreak} effect arises because models are often less aligned for safety in languages with scarce training data~\cite{wang2024xsafety,kumar2025polyguard}. As LLM usage expands to diverse languages, there is a pressing need to understand and improve their multilingual safety performance, including both comprehensive multilingual capabilities benchmarking~\cite{phan2025humanitysexam} and domain-specific robustness evaluation~\cite{kim2025optimizingretrievalstrategiesfinancial}.
@@ -216,20 +216,7 @@ jpn.Jpan & 0.066 & 0.253 & 0.104 & 0.776 & kor.Hang & 0.055 & 0.123 & 0.090 & 0.
 \label{fig:heatmap}
 \end{figure*}
 
-\subsection{Language Family and Script Analysis}
-
-To investigate whether template effects vary systematically by linguistic typology, we group languages by family (Germanic, Romance, Slavic, CJK, Other) and script (Latin vs.\ Non-Latin). Figure~\ref{fig:forest_apertus} visualizes template translation effects (Native - English) with 95\% confidence intervals for each language under the Apertus judge.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.48\textwidth]{figures/forest_plot_apertus.pdf}
-\caption{\textbf{Forest plot: Apertus template translation effects.} Each point shows the change in StrongREJECT score when switching from English to native rubric, with 95\% CI. Green indicates positive effect (native helps), red indicates negative. German, Spanish, and Indonesian show large gains; Turkish, CJK languages show degradation.}
-\label{fig:forest_apertus}
-\end{figure}
-
-\paragraph{Language family heterogeneity.} One-way ANOVA reveals no significant family-level differences in Apertus template effect ($F{=}0.28$, $p{=}0.88$), indicating that linguistic family alone does not predict template translation benefit. However, individual languages within families show substantial variance: Germanic languages range from +2.28 (German) to $-3.26$ (Dutch), and Romance languages span from +1.99 (Spanish) to $-5.89$ (Italian). This suggests that template effect depends on language-specific translation quality and model coverage rather than broad typological categories.
-
-\paragraph{Script system comparison.} Latin-script languages (N=11) show mean template effect of $-1.00$ points, while Non-Latin scripts (N=5) show $-3.48$ points. However, this difference is not statistically significant ($t{=}1.48$, $p{=}0.16$), likely due to high within-group variance. The forest plot (Figure~\ref{fig:forest_apertus}) reveals that script system is not a reliable predictor of template benefit.
+\paragraph{Language family and script.} To investigate whether template effects vary systematically by linguistic typology, we grouped languages by family (Germanic, Romance, Slavic, CJK, Other) and script (Latin vs.\ Non-Latin). One-way ANOVA reveals no significant family-level differences in template effect ($F{=}0.28$, $p{=}0.88$), and Latin vs.\ Non-Latin script comparison is also non-significant ($t{=}1.48$, $p{=}0.16$). Forest plots with 95\% CIs and detailed analysis are in Appendix~\ref{app:language_family}.
 
 \subsection{Quantifying the Judge Gap}
 With the English rubric, the average gap \(\text{GPT--Eng} - \text{Apertus--Eng}\) is \(\mathbf{0.743}\) (95\% CI: 0.73--0.76). With the native rubric, \(\text{GPT--Trans} - \text{Apertus--Trans} = \mathbf{0.277}\) (95\% CI: 0.18--0.37). In relative terms, Apertus detects only \(\mathbf{8.4\%}\) of GPT's harmfulness on English, improving to \(\sim\mathbf{56.1\%}\) under the native rubric (0.354/0.631). Thus, template translation is a \emph{partial} mitigation; selecting a stronger judge remains the primary lever.
@@ -435,7 +422,21 @@ Figure~\ref{fig:scatter} shows judge performance across all 16 languages in a li
 
 \clearpage
 
+\section{Language Family and Script Analysis}
+\label{app:language_family}
 
+To investigate whether template effects vary systematically by linguistic typology, we group languages by family (Germanic, Romance, Slavic, CJK, Other) and script (Latin vs.\ Non-Latin). Figure~\ref{fig:forest_apertus} visualizes template translation effects (Native - English) with 95\% confidence intervals for each language under the Apertus judge.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/forest_plot_apertus.pdf}
+\caption{\textbf{Forest plot: Apertus template translation effects.} Each point shows the change in StrongREJECT score when switching from English to native rubric, with 95\% CI. Green indicates positive effect (native helps), red indicates negative. German, Spanish, and Indonesian show large gains; Turkish, CJK languages show degradation.}
+\label{fig:forest_apertus}
+\end{figure}
+
+\paragraph{Language family heterogeneity.} One-way ANOVA reveals no significant family-level differences in Apertus template effect ($F{=}0.28$, $p{=}0.88$), indicating that linguistic family alone does not predict template translation benefit. However, individual languages within families show substantial variance: Germanic languages range from +2.28 (German) to $-3.26$ (Dutch), and Romance languages span from +1.99 (Spanish) to $-5.89$ (Italian). This suggests that template effect depends on language-specific translation quality and model coverage rather than broad typological categories.
+
+\paragraph{Script system comparison.} Latin-script languages (N=11) show mean template effect of $-1.00$ points, while Non-Latin scripts (N=5) show $-3.48$ points. However, this difference is not statistically significant ($t{=}1.48$, $p{=}0.16$), likely due to high within-group variance. The forest plot reveals that script system is not a reliable predictor of template benefit.
 
 \section{Multi-Turn Jailbreak Analysis}
 \label{app:turn_analysis}
